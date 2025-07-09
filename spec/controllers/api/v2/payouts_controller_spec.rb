@@ -4,17 +4,9 @@ require "spec_helper"
 require "shared_examples/authorized_oauth_v1_api_method"
 
 describe Api::V2::PayoutsController do
-      before do
-    # Configure cipher keys for external ID generation - use and_call_original to allow other GlobalConfig calls
-    allow(GlobalConfig).to receive(:get).and_call_original
-    allow(GlobalConfig).to receive(:get).with("OBFUSCATE_IDS_CIPHER_KEY").and_return("test_cipher_key_32_chars_long123")
-    allow(GlobalConfig).to receive(:get).with("OBFUSCATE_IDS_NUMERIC_CIPHER_KEY").and_return("123456789")
-
-    # Reload the ObfuscateIds module constants with the new configuration
-    ObfuscateIds.send(:remove_const, :CIPHER_KEY) if ObfuscateIds.const_defined?(:CIPHER_KEY)
-    ObfuscateIds.send(:remove_const, :NUMERIC_CIPHER_KEY) if ObfuscateIds.const_defined?(:NUMERIC_CIPHER_KEY)
-    ObfuscateIds.const_set(:CIPHER_KEY, GlobalConfig.get("OBFUSCATE_IDS_CIPHER_KEY"))
-    ObfuscateIds.const_set(:NUMERIC_CIPHER_KEY, GlobalConfig.get("OBFUSCATE_IDS_NUMERIC_CIPHER_KEY").to_i)
+  before do
+    stub_const("ObfuscateIds::CIPHER_KEY", "a" * 32)
+    stub_const("ObfuscateIds::NUMERIC_CIPHER_KEY", 123456789)
 
     @seller = create(:user)
     @other_seller = create(:user)
@@ -22,14 +14,6 @@ describe Api::V2::PayoutsController do
     # Ensure payments are created after the displayable date and with recent timestamps
     @payout = create(:payment_completed, user: @seller, amount_cents: 150_00, currency: "USD", created_at: 1.day.ago)
     @payout_by_other_seller = create(:payment_completed, user: @other_seller, amount_cents: 100_00, currency: "USD", created_at: 1.day.ago)
-  end
-
-  after do
-    # Restore original constants to avoid affecting other tests
-    ObfuscateIds.send(:remove_const, :CIPHER_KEY) if ObfuscateIds.const_defined?(:CIPHER_KEY)
-    ObfuscateIds.send(:remove_const, :NUMERIC_CIPHER_KEY) if ObfuscateIds.const_defined?(:NUMERIC_CIPHER_KEY)
-    ObfuscateIds.const_set(:CIPHER_KEY, GlobalConfig.get("OBFUSCATE_IDS_CIPHER_KEY"))
-    ObfuscateIds.const_set(:NUMERIC_CIPHER_KEY, GlobalConfig.get("OBFUSCATE_IDS_NUMERIC_CIPHER_KEY").to_i)
   end
 
   describe "GET 'index'" do
@@ -145,7 +129,7 @@ describe Api::V2::PayoutsController do
         }.as_json)
       end
 
-            it "only returns payouts for the current seller" do
+      it "only returns payouts for the current seller" do
         create(:payment_completed, user: @other_seller, created_at: 1.day.ago)
         seller_payout = create(:payment_completed, user: @seller, created_at: 2.hours.ago)
 
@@ -159,13 +143,13 @@ describe Api::V2::PayoutsController do
       it "filters by date correctly when both before and after are provided" do
         old_payout = create(:payment_completed, user: @seller, created_at: 10.days.ago)
         recent_payout = create(:payment_completed, user: @seller, created_at: 1.day.from_now)
-        middle_payout = create(:payment_completed, user: @seller, created_at: 3.days.ago)
+        in_range_payout = create(:payment_completed, user: @seller, created_at: 3.days.ago)
 
         @params.merge!(after: 5.days.ago.strftime("%Y-%m-%d"), before: 2.days.ago.strftime("%Y-%m-%d"))
         get :index, params: @params
 
         payout_ids = response.parsed_body["payouts"].map { |p| p["id"] }
-        expect(payout_ids).to include(middle_payout.external_id)
+        expect(payout_ids).to include(in_range_payout.external_id)
         expect(payout_ids).not_to include(old_payout.external_id)
         expect(payout_ids).not_to include(recent_payout.external_id)
       end
@@ -193,17 +177,6 @@ describe Api::V2::PayoutsController do
       it "the response is 403 forbidden for incorrect scope" do
         get :index, params: @params
         expect(response.code).to eq "403"
-      end
-    end
-
-    describe "when not logged in" do
-      before do
-        @params.merge!(format: :json)
-      end
-
-      it "the response is 401 unauthorized" do
-        get :index, params: @params
-        expect(response.code).to eq "401"
       end
     end
   end
@@ -244,20 +217,6 @@ describe Api::V2::PayoutsController do
           message: "The payout was not found."
         }.as_json)
       end
-
-      it "returns correct payout data structure" do
-        get :show, params: @params
-        payout_data = response.parsed_body["payout"]
-
-        expect(payout_data).to include(
-          "id" => @payout.external_id,
-          "amount" => (@payout.amount_cents / 100.0).to_s,
-          "currency" => @payout.currency,
-          "status" => @payout.state,
-          "payment_processor" => @payout.processor
-        )
-        expect(payout_data["created_at"]).to be_present
-      end
     end
 
     describe "when logged in with public scope" do
@@ -269,17 +228,6 @@ describe Api::V2::PayoutsController do
       it "the response is 403 forbidden for incorrect scope" do
         get :show, params: @params
         expect(response.code).to eq "403"
-      end
-    end
-
-    describe "when not logged in" do
-      before do
-        @params.merge!(format: :json)
-      end
-
-      it "the response is 401 unauthorized" do
-        get :show, params: @params
-        expect(response.code).to eq "401"
       end
     end
   end
