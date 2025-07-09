@@ -189,10 +189,10 @@ class Payment < ApplicationRecord
     sync_with_paypal if processor == PayoutProcessorType::PAYPAL
   end
 
-  def as_json
+  def as_json(options = {})
     {
       id: external_id,
-      amount: (amount_cents / 100.0).to_s,
+      amount: amount_cents ? (amount_cents / 100.0).to_s : "0.00",
       currency: currency,
       status: state,
       created_at: created_at,
