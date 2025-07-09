@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V2::PayoutsController < Api::V2::BaseController
-  before_action -> { doorkeeper_authorize!(:view_sales) }
+  before_action -> { doorkeeper_authorize!(:view_payouts) }
 
   RESULTS_PER_PAGE = 10
 

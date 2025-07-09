@@ -37,9 +37,9 @@ describe Api::V2::PayoutsController do
       @params = {}
     end
 
-    describe "when logged in with sales scope" do
+    describe "when logged in with view_payouts scope" do
       before do
-        @token = create("doorkeeper/access_token", application: @app, resource_owner_id: @seller.id, scopes: "view_sales")
+        @token = create("doorkeeper/access_token", application: @app, resource_owner_id: @seller.id, scopes: "view_payouts")
         @params.merge!(format: :json, access_token: @token.token)
       end
 
@@ -213,9 +213,9 @@ describe Api::V2::PayoutsController do
       @params = { id: @payout.external_id }
     end
 
-    describe "when logged in with sales scope" do
+    describe "when logged in with view_payouts scope" do
       before do
-        @token = create("doorkeeper/access_token", application: @app, resource_owner_id: @seller.id, scopes: "view_sales")
+        @token = create("doorkeeper/access_token", application: @app, resource_owner_id: @seller.id, scopes: "view_payouts")
         @params.merge!(access_token: @token.token)
       end
 
