@@ -24,7 +24,7 @@ class Api::V2::PayoutsController < Api::V2::BaseController
       rescue ArgumentError
         return error_400("Invalid page_key.")
       end
-      where_page_data = ["created_at <= ? and id < ?", last_payout_created_at, last_payout_id]
+      where_page_data = ["(created_at < ?) OR (created_at = ? AND id < ?)", last_payout_created_at, last_payout_created_at, last_payout_id]
     end
 
     paginated_payouts = filter_payouts(start_date: start_date, end_date: end_date)

@@ -411,7 +411,7 @@ describe Payment do
     it "returns the correct values for basic fields" do
       json = @payment.as_json
 
-      expect(json[:amount]).to eq("25.0")
+      expect(json[:amount]).to eq("25.00")
       expect(json[:currency]).to eq("USD")
       expect(json[:status]).to eq(@payment.state)
       expect(json[:created_at]).to eq(@payment.created_at)
@@ -423,7 +423,7 @@ describe Payment do
       expect(@payment.as_json[:amount]).to eq("123.45")
 
       @payment.update!(amount_cents: 100)
-      expect(@payment.as_json[:amount]).to eq("1.0")
+      expect(@payment.as_json[:amount]).to eq("1.00")
 
       @payment.update!(amount_cents: 99)
       expect(@payment.as_json[:amount]).to eq("0.99")
@@ -475,12 +475,12 @@ describe Payment do
       eur_payment = create(:payment, currency: "EUR", amount_cents: 5000)
 
       expect(eur_payment.as_json[:currency]).to eq("EUR")
-      expect(eur_payment.as_json[:amount]).to eq("50.0")
+      expect(eur_payment.as_json[:amount]).to eq("50.00")
     end
 
     it "handles zero amount correctly" do
       @payment.update!(amount_cents: 0)
-      expect(@payment.as_json[:amount]).to eq("0.0")
+      expect(@payment.as_json[:amount]).to eq("0.00")
     end
   end
 end
