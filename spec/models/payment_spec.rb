@@ -385,4 +385,102 @@ describe Payment do
       end
     end
   end
+
+  describe "#as_json" do
+    before do
+      allow(ObfuscateIds).to receive(:encrypt).and_return("mocked_external_id")
+
+      @payment = create(:payment,
+                       amount_cents: 2500,
+                       currency: "USD",
+                       processor: PayoutProcessorType::STRIPE,
+                       processor_fee_cents: 25)
+    end
+
+    it "has the right keys" do
+      %i[id amount currency status created_at processed_at payment_processor].each do |key|
+        expect(@payment.as_json.key?(key)).to be(true)
+      end
+    end
+
+    it "returns external_id for the id field" do
+      json = @payment.as_json
+      expect(json[:id]).to eq("mocked_external_id")
+    end
+
+    it "returns the correct values for basic fields" do
+      json = @payment.as_json
+
+      expect(json[:amount]).to eq("25.0")
+      expect(json[:currency]).to eq("USD")
+      expect(json[:status]).to eq(@payment.state)
+      expect(json[:created_at]).to eq(@payment.created_at)
+      expect(json[:payment_processor]).to eq(PayoutProcessorType::STRIPE)
+    end
+
+    it "returns correct formatted amount" do
+      @payment.update!(amount_cents: 12345)
+      expect(@payment.as_json[:amount]).to eq("123.45")
+
+      @payment.update!(amount_cents: 100)
+      expect(@payment.as_json[:amount]).to eq("1.0")
+
+      @payment.update!(amount_cents: 99)
+      expect(@payment.as_json[:amount]).to eq("0.99")
+    end
+
+    context "when payment is not completed" do
+      it "returns nil for processed_at in processing state" do
+        @payment.update!(state: Payment::PROCESSING)
+        expect(@payment.as_json[:processed_at]).to be_nil
+      end
+
+      it "returns nil for processed_at in failed state" do
+        @payment.update!(state: Payment::FAILED)
+        expect(@payment.as_json[:processed_at]).to be_nil
+      end
+
+      it "returns nil for processed_at in creating state" do
+        @payment.update!(state: Payment::CREATING)
+        expect(@payment.as_json[:processed_at]).to be_nil
+      end
+    end
+
+    context "when payment is completed" do
+      it "returns correct processed_at timestamp" do
+        # Set required fields for state transition
+        @payment.update!(
+          txn_id: "test_txn_123",
+          processor_fee_cents: 25,
+          stripe_transfer_id: "tr_123",
+          stripe_connect_account_id: "acct_123"
+        )
+        @payment.mark_completed!
+
+        json = @payment.as_json
+        expect(json[:processed_at]).to eq(@payment.updated_at)
+        expect(json[:status]).to eq(Payment::COMPLETED)
+      end
+    end
+
+    it "works with different payment processors" do
+      paypal_payment = create(:payment, processor: PayoutProcessorType::PAYPAL)
+      expect(paypal_payment.as_json[:payment_processor]).to eq(PayoutProcessorType::PAYPAL)
+
+      stripe_payment = create(:payment, processor: PayoutProcessorType::STRIPE)
+      expect(stripe_payment.as_json[:payment_processor]).to eq(PayoutProcessorType::STRIPE)
+    end
+
+    it "works with different currencies" do
+      eur_payment = create(:payment, currency: "EUR", amount_cents: 5000)
+
+      expect(eur_payment.as_json[:currency]).to eq("EUR")
+      expect(eur_payment.as_json[:amount]).to eq("50.0")
+    end
+
+    it "handles zero amount correctly" do
+      @payment.update!(amount_cents: 0)
+      expect(@payment.as_json[:amount]).to eq("0.0")
+    end
+  end
 end
