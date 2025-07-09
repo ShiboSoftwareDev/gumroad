@@ -27,20 +27,20 @@ class Api::V2::PayoutsController < Api::V2::BaseController
       where_page_data = ["created_at <= ? and id < ?", last_payout_created_at, last_payout_id]
     end
 
-    payouts = filter_payouts(start_date: start_date, end_date: end_date)
-    payouts = payouts.where(where_page_data) if where_page_data
-    payouts = payouts.limit(RESULTS_PER_PAGE + 1).to_a
+    paginated_payouts = filter_payouts(start_date: start_date, end_date: end_date)
+    paginated_payouts = paginated_payouts.where(where_page_data) if where_page_data
+    paginated_payouts = paginated_payouts.limit(RESULTS_PER_PAGE + 1).to_a
 
-    has_next_page = payouts.size > RESULTS_PER_PAGE
-    payouts = payouts.first(RESULTS_PER_PAGE)
-    additional_response = has_next_page ? pagination_info(payouts.last) : {}
+    has_next_page = paginated_payouts.size > RESULTS_PER_PAGE
+    paginated_payouts = paginated_payouts.first(RESULTS_PER_PAGE)
+    additional_response = has_next_page ? pagination_info(paginated_payouts.last) : {}
 
-    success_with_object(:payouts, payouts.as_json(version: 2), additional_response)
+    success_with_object(:payouts, paginated_payouts.as_json, additional_response)
   end
 
   def show
     payout = current_resource_owner.payments.find_by_external_id(params[:id])
-    payout ? success_with_payout(payout.as_json(version: 2)) : error_with_payout
+    payout ? success_with_payout(payout.as_json) : error_with_payout
   end
 
   private
@@ -52,7 +52,7 @@ class Api::V2::PayoutsController < Api::V2::BaseController
       error_with_object(:payout, payout)
     end
 
-    def filter_payouts(start_date: nil, end_date: nil)
+    def filter_payouts(start_date:, end_date:)
       payouts = current_resource_owner.payments.displayable
       payouts = payouts.where("created_at >= ?", start_date) if start_date
       payouts = payouts.where("created_at < ?", end_date) if end_date

@@ -46,7 +46,7 @@ describe Api::V2::PayoutsController do
       it "returns the right response" do
         travel_to(Time.current + 5.minutes) do
           get :index, params: @params
-          payouts_json = [@payout.as_json(version: 2)].map(&:as_json)
+          payouts_json = [@payout.as_json].map(&:as_json)
 
           expect(response.parsed_body.keys).to match_array ["success", "payouts"]
           expect(response.parsed_body["success"]).to eq true
@@ -64,7 +64,7 @@ describe Api::V2::PayoutsController do
           expected_page_key = "#{expected_payouts[per_page - 1].created_at.to_fs(:usec)}-#{ObfuscateIds.encrypt_numeric(expected_payouts[per_page - 1].id)}"
           expect(response.parsed_body).to include({
             success: true,
-            payouts: expected_payouts.first(per_page).as_json(version: 2),
+            payouts: expected_payouts.first(per_page).as_json,
             next_page_url: "/v2/payouts.json?page_key=#{expected_page_key}",
             next_page_key: expected_page_key,
           }.as_json)
@@ -74,7 +74,7 @@ describe Api::V2::PayoutsController do
           get :index, params: @params
           expect(response.parsed_body).to eq({
             success: true,
-            payouts: expected_payouts[per_page..].as_json(version: 2)
+            payouts: expected_payouts[per_page..].as_json
           }.as_json)
           total_found += response.parsed_body["payouts"].size
           expect(total_found).to eq(expected_payouts.size)
@@ -102,7 +102,7 @@ describe Api::V2::PayoutsController do
         get :index, params: @params
         expect(response.parsed_body).to eq({
           success: true,
-          payouts: [in_range_payout.as_json(version: 2)]
+          payouts: [in_range_payout.as_json]
         }.as_json)
       end
 
@@ -223,7 +223,7 @@ describe Api::V2::PayoutsController do
         get :show, params: @params
         expect(response.parsed_body).to eq({
           success: true,
-          payout: @payout.as_json(version: 2)
+          payout: @payout.as_json
         }.as_json)
       end
 
