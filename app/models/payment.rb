@@ -192,7 +192,7 @@ class Payment < ApplicationRecord
   def as_json(options = {})
     {
       id: external_id,
-      amount: amount_cents ? (amount_cents / 100.0).to_s : "0.00",
+      amount: format("%.2f", (amount_cents || 0) / 100.0),
       currency: currency,
       status: state,
       created_at: created_at,
