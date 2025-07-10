@@ -386,6 +386,79 @@ describe Payment do
     end
   end
 
+  describe "#attributed_sales" do
+    let(:user) { create(:user) }
+    let(:product) { create(:product, user: user) }
+    let(:balance) { create(:balance, user: user) }
+    let(:payment) { create(:payment, user: user, balances: [balance], payout_period_end_date: 3.days.ago) }
+
+    context "with successful sales" do
+      it "includes successful sales from associated balances" do
+        successful_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance)
+
+        sales = payment.attributed_sales
+
+        expect(sales).to include(successful_sale)
+        expect(sales.length).to eq(1)
+      end
+    end
+
+    context "with chargedback sales" do
+      it "includes chargedback sales from associated balances" do
+        chargedback_sale = create(:purchase, seller: user, link: product, purchase_chargeback_balance: balance, chargeback_date: 1.day.ago)
+
+        sales = payment.attributed_sales
+
+        expect(sales).to include(chargedback_sale)
+        expect(sales.length).to eq(1)
+      end
+    end
+
+    context "with refunded sales" do
+      it "includes refunded sales from associated balances" do
+        refunded_sale = create(:purchase, :refunded, seller: user, link: product, purchase_refund_balance: balance)
+
+        sales = payment.attributed_sales
+
+        expect(sales).to include(refunded_sale)
+        expect(sales.length).to eq(1)
+      end
+    end
+
+    context "with multiple sale types" do
+      it "includes all types of sales" do
+        successful_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance)
+        chargedback_sale = create(:purchase, seller: user, link: product, purchase_chargeback_balance: balance, chargeback_date: 1.day.ago)
+        refunded_sale = create(:purchase, :refunded, seller: user, link: product, purchase_refund_balance: balance)
+
+        sales = payment.attributed_sales
+
+        expect(sales).to include(successful_sale, chargedback_sale, refunded_sale)
+        expect(sales.length).to eq(3)
+      end
+    end
+
+    context "with no associated sales" do
+      it "returns an empty array" do
+        sales = payment.attributed_sales
+
+        expect(sales).to be_empty
+      end
+    end
+
+    it "returns sales sorted by created_at desc" do
+      older_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance, created_at: 3.days.ago)
+      newer_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance, created_at: 1.day.ago)
+      middle_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance, created_at: 2.days.ago)
+
+      sales = payment.attributed_sales
+
+      sales_with_expected_order = [newer_sale, middle_sale, older_sale]
+
+      expect(sales).to eq(sales_with_expected_order)
+    end
+  end
+
   describe "#as_json" do
     before do
       allow(ObfuscateIds).to receive(:encrypt).and_return("mocked_external_id")
@@ -481,6 +554,48 @@ describe Payment do
     it "handles zero amount correctly" do
       @payment.update!(amount_cents: 0)
       expect(@payment.as_json[:amount]).to eq("0.00")
+    end
+
+    context "with include_sales option" do
+      let(:user) { create(:user) }
+      let(:product) { create(:product, user: user) }
+      let(:balance) { create(:balance, user: user) }
+      let(:payment) { create(:payment, user: user, balances: [balance]) }
+
+      before do
+        allow(ObfuscateIds).to receive(:encrypt).and_return("mocked_external_id")
+      end
+
+      context "when include_sales is true" do
+        it "includes attributed sales data" do
+          successful_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance)
+
+          json = payment.as_json(include_sales: true)
+
+          expect(json[:sales]).to be_an(Array)
+          expect(json[:sales].length).to eq(1)
+          expect(json[:sales].first).to be_a(Hash)
+          expect(json[:sales].first).to have_key(:id)
+          expect(json[:sales].first).to have_key(:product_name)
+          expect(json[:sales].first[:product_name]).to eq(product.name)
+        end
+      end
+
+      context "when include_sales is false" do
+        it "does not include sales key in the response" do
+          json = payment.as_json(include_sales: false)
+
+          expect(json).not_to have_key(:sales)
+        end
+      end
+
+      context "when include_sales option is not provided" do
+        it "does not include sales key in the response" do
+          json = payment.as_json
+
+          expect(json).not_to have_key(:sales)
+        end
+      end
     end
   end
 end

@@ -200,6 +200,71 @@ describe Api::V2::PayoutsController do
         }.as_json)
       end
 
+      context "when logged in with view_sales scope" do
+        before do
+          @token = create("doorkeeper/access_token", application: @app, resource_owner_id: @seller.id, scopes: "view_payouts view_sales")
+          @params.merge!(access_token: @token.token)
+        end
+
+        it "includes sales in the payout response when sales exist" do
+          product = create(:product, user: @seller)
+          balance = create(:balance, user: @seller)
+          @payout.balances = [balance]
+          @payout.save!
+
+          successful_sale = create(:purchase, seller: @seller, link: product, purchase_success_balance: balance)
+
+          get :show, params: @params
+
+          response_payout = response.parsed_body["payout"]
+          expect(response_payout).to have_key("sales")
+          expect(response_payout["sales"]).to be_an(Array)
+          expect(response_payout["sales"].length).to eq(1)
+
+          sale_data = response_payout["sales"].first
+          expect(sale_data["id"]).to eq(successful_sale.external_id)
+        end
+
+        it "includes sales array even when no sales exist" do
+          get :show, params: @params
+
+          response_payout = response.parsed_body["payout"]
+          expect(response_payout).to have_key("sales")
+          expect(response_payout["sales"]).to be_an(Array)
+          expect(response_payout["sales"]).to be_empty
+        end
+      end
+
+      context "when logged in without view_sales scope" do
+        before do
+          @token = create("doorkeeper/access_token", application: @app, resource_owner_id: @seller.id, scopes: "view_payouts")
+          @params.merge!(access_token: @token.token)
+        end
+
+        it "excludes sales from the payout response" do
+          product = create(:product, user: @seller)
+          balance = create(:balance, user: @seller)
+          @payout.balances = [balance]
+          @payout.save!
+
+          create(:purchase, seller: @seller, link: product, purchase_success_balance: balance)
+
+          get :show, params: @params
+
+          response_payout = response.parsed_body["payout"]
+          expect(response_payout).not_to have_key("sales")
+        end
+
+        it "returns standard payout data without sales key" do
+          get :show, params: @params
+
+          response_payout = response.parsed_body["payout"]
+          expected_keys = %w[id amount currency status created_at processed_at payment_processor]
+          expect(response_payout.keys).to match_array(expected_keys)
+          expect(response_payout).not_to have_key("sales")
+        end
+      end
+
       it "does not return a payout that does not belong to the seller" do
         @params.merge!(id: @payout_by_other_seller.external_id)
         get :show, params: @params

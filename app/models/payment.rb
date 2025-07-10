@@ -190,7 +190,7 @@ class Payment < ApplicationRecord
   end
 
   def as_json(options = {})
-    {
+    json = {
       id: external_id,
       amount: format("%.2f", (amount_cents || 0) / 100.0),
       currency: currency,
@@ -199,6 +199,30 @@ class Payment < ApplicationRecord
       processed_at: state == COMPLETED ? updated_at : nil,
       payment_processor: processor
     }
+
+    json[:sales] = attributed_sales.map { |sale| sale.as_json(version: 2) } if options[:include_sales]
+
+    json
+  end
+
+  def attributed_sales
+    sales = []
+
+    balances.find_each do |balance|
+      balance.successful_sales.includes(:link).find_each do |purchase|
+        sales << purchase
+      end
+
+      balance.chargedback_sales.includes(:link).find_each do |purchase|
+        sales << purchase
+      end
+
+      balance.refunded_sales.includes(:link).find_each do |purchase|
+        sales << purchase
+      end
+    end
+
+    sales.uniq.sort_by { |sale| [-sale.created_at.to_i, -sale.id] }
   end
 
   private

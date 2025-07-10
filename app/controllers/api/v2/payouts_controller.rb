@@ -40,7 +40,12 @@ class Api::V2::PayoutsController < Api::V2::BaseController
 
   def show
     payout = current_resource_owner.payments.find_by_external_id(params[:id])
-    payout ? success_with_payout(payout.as_json) : error_with_payout
+    if payout
+      include_sales = doorkeeper_token.scopes.include?("view_sales")
+      success_with_payout(payout.as_json(include_sales: include_sales))
+    else
+      error_with_payout
+    end
   end
 
   private
