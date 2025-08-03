@@ -212,36 +212,33 @@ class Payment < ApplicationRecord
   end
 
   def successful_sales
-    sales = []
-    balances.find_each do |balance|
-      balance.successful_sales.includes(:link).find_each do |purchase|
-        sales << purchase unless purchase.refunded? || purchase.chargedback?
-      end
-    end
-    sales.uniq.sort_by { |sale| [-sale.created_at.to_i, -sale.id] }
+    Purchase.where(purchase_success_balance_id: balance_ids)
+            .not_chargedback_or_chargedback_reversed
+            .not_fully_refunded
+            .includes(:link)
+            .distinct
+            .order(created_at: :desc, id: :desc)
   end
 
   def refunded_sales
-    sales = []
-    balances.find_each do |balance|
-      balance.refunded_sales.includes(:link).find_each do |purchase|
-        sales << purchase
-      end
-    end
-    sales.uniq.sort_by { |sale| [-sale.created_at.to_i, -sale.id] }
+    Purchase.where(purchase_refund_balance_id: balance_ids)
+            .includes(:link)
+            .distinct
+            .order(created_at: :desc, id: :desc)
   end
 
   def disputed_sales
-    sales = []
-    balances.find_each do |balance|
-      balance.chargedback_sales.includes(:link).find_each do |purchase|
-        sales << purchase
-      end
-    end
-    sales.uniq.sort_by { |sale| [-sale.created_at.to_i, -sale.id] }
+    Purchase.where(purchase_chargeback_balance_id: balance_ids)
+            .includes(:link)
+            .distinct
+            .order(created_at: :desc, id: :desc)
   end
 
   private
+    def balance_ids
+      @balance_ids ||= balances.pluck(:id)
+    end
+
     def mark_balances_as_paid
       balances.each(&:mark_paid!)
     end
