@@ -197,31 +197,47 @@ class Payment < ApplicationRecord
       status: state,
       created_at: created_at,
       processed_at: state == COMPLETED ? updated_at : nil,
-      payment_processor: processor
+      payment_processor: processor,
+      bank_account_visual: bank_account&.account_number_visual,
+      paypal_email: payment_address
     }
 
-    json[:sales] = attributed_sales.map { |sale| sale.as_json(version: 2) } if options[:include_sales]
+    if options[:include_sales]
+      json[:sales] = successful_sales.map { |sale| sale.as_json(version: 2) }
+      json[:refunded_sales] = refunded_sales.map { |sale| sale.as_json(version: 2) }
+      json[:disputed_sales] = disputed_sales.map { |sale| sale.as_json(version: 2) }
+    end
 
     json
   end
 
-  def attributed_sales
+  def successful_sales
     sales = []
-
     balances.find_each do |balance|
       balance.successful_sales.includes(:link).find_each do |purchase|
-        sales << purchase
+        sales << purchase unless purchase.refunded? || purchase.chargedback?
       end
+    end
+    sales.uniq.sort_by { |sale| [-sale.created_at.to_i, -sale.id] }
+  end
 
-      balance.chargedback_sales.includes(:link).find_each do |purchase|
-        sales << purchase
-      end
-
+  def refunded_sales
+    sales = []
+    balances.find_each do |balance|
       balance.refunded_sales.includes(:link).find_each do |purchase|
         sales << purchase
       end
     end
+    sales.uniq.sort_by { |sale| [-sale.created_at.to_i, -sale.id] }
+  end
 
+  def disputed_sales
+    sales = []
+    balances.find_each do |balance|
+      balance.chargedback_sales.includes(:link).find_each do |purchase|
+        sales << purchase
+      end
+    end
     sales.uniq.sort_by { |sale| [-sale.created_at.to_i, -sale.id] }
   end
 
