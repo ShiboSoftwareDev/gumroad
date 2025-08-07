@@ -273,6 +273,7 @@ class User < ApplicationRecord
   after_save :trigger_iffy_ingest
   after_update :update_audience_members_affiliates
   after_update :update_product_search_index!
+  after_update :track_user_payout_pause, if: :saved_change_to_payouts_paused_by_user?
   after_commit :move_purchases_to_new_email, on: :update, if: :email_previously_changed?
   after_commit :make_affiliate_of_the_matching_approved_affiliate_requests, on: [:create, :update], if: ->(user) { user.confirmed_at_previously_changed? && user.confirmed? }
   after_commit :generate_subscribe_preview, on: [:create, :update], if: :should_subscribe_preview_be_regenerated?
@@ -870,6 +871,18 @@ class User < ApplicationRecord
     payouts_paused_internally? || payouts_paused_by_user?
   end
 
+  def payouts_paused_with_source
+    return nil unless payouts_paused?
+
+    if payouts_paused_by_user?
+      "user"
+    elsif payout_pause_source.present?
+      payout_pause_source
+    elsif payouts_paused_internally?
+      "admin"
+    end
+  end
+
   def made_a_successful_sale_with_a_stripe_connect_or_paypal_connect_account?
     ids = merchant_accounts
       .stripe_connect
@@ -1164,5 +1177,19 @@ class User < ApplicationRecord
 
     def reset_avatar_changed
       self.avatar_changed = false
+    end
+
+    def track_user_payout_pause
+      if payouts_paused_by_user?
+        update_columns(
+          payout_pause_source: "user",
+          payout_pause_reason: "User paused their own payouts"
+        )
+      else
+        update_columns(
+          payout_pause_source: nil,
+          payout_pause_reason: nil
+        ) unless payouts_paused_internally?
+      end
     end
 end

@@ -145,6 +145,8 @@ type Props = {
   formatted_balance_to_forfeit: string | null;
   payouts_paused_internally: boolean;
   payouts_paused_by_user: boolean;
+  payout_pause_source: string | null;
+  payout_pause_reason: string | null;
   payout_threshold_cents: number;
   minimum_payout_threshold_cents: number;
   payout_frequency: PayoutFrequency;
@@ -936,7 +938,17 @@ const PaymentsPage = (props: Props) => {
               )}
             </fieldset>
             {props.payouts_paused_internally ? (
-              <WithTooltip tip="Your payouts were paused by our payment processor. Please update your information below.">
+              <WithTooltip
+                tip={
+                  props.payout_pause_source === "stripe"
+                    ? "Your payouts were paused by our payment processor. Please update your verification information below."
+                    : props.payout_pause_source === "admin"
+                      ? `Your payouts were paused by Gumroad support${props.payout_pause_reason ? `: ${props.payout_pause_reason}` : "."}`
+                      : props.payout_pause_source === "system"
+                        ? `Your payouts were automatically paused${props.payout_pause_reason ? `: ${props.payout_pause_reason}` : " for security review."}`
+                        : "Your payouts were paused by our payment processor. Please update your information below."
+                }
+              >
                 {payoutsPausedToggle}
               </WithTooltip>
             ) : (

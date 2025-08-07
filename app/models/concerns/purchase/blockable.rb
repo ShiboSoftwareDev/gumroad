@@ -181,11 +181,17 @@ module Purchase::Blockable
 
       failed_price_cents = failed_seller_purchases.sum(:price_cents)
       if failed_price_cents > max_seller_failed_purchases_price_cents
-        seller.update!(payouts_paused_internally: true)
-
         failed_price_amount = MoneyFormatter.format(failed_price_cents, :usd, no_cents_if_whole: true, symbol: true)
+        pause_reason = "high volume of failed purchases (#{failed_price_amount} USD in #{failed_seller_purchases_watch_minutes} minutes)"
+
+        seller.update!(
+          payouts_paused_internally: true,
+          payout_pause_source: "system",
+          payout_pause_reason: pause_reason
+        )
+
         seller.comments.create(
-          content: "Payouts paused due to high volume of failed purchases (#{failed_price_amount} USD in #{failed_seller_purchases_watch_minutes} minutes).",
+          content: "Payouts paused due to #{pause_reason}.",
           comment_type: Comment::COMMENT_TYPE_ON_PROBATION,
           author_name: "pause_payouts_for_seller_based_on_recent_failures"
         )

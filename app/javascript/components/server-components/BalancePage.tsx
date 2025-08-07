@@ -603,6 +603,8 @@ const BalancePage = ({
   next_payout_period_data,
   processing_payout_periods_data,
   payouts_status,
+  payout_pause_source,
+  payout_pause_reason,
   past_payout_period_data,
   instant_payout,
   show_instant_payouts_notice,
@@ -614,6 +616,8 @@ const BalancePage = ({
     | null;
   processing_payout_periods_data: PayoutPeriodData[];
   payouts_status: "paused" | "payable";
+  payout_pause_source: string | null;
+  payout_pause_reason: string | null;
   past_payout_period_data: PayoutPeriodData[];
   instant_payout: {
     payable_amount_cents: number;
@@ -854,7 +858,23 @@ const BalancePage = ({
         {payouts_status === "paused" ? (
           <div className="warning" role="status">
             <p>
-              <strong>Your payouts have been paused.</strong>
+              <strong>
+                {payout_pause_source === "stripe"
+                  ? "Your payouts have been paused by our payment processor."
+                  : payout_pause_source === "admin"
+                    ? `Your payouts have been paused by Gumroad support${payout_pause_reason ? `: ${payout_pause_reason}` : "."}`
+                    : payout_pause_source === "user"
+                      ? "You have paused your payouts."
+                      : payout_pause_source === "system"
+                        ? `Your payouts have been automatically paused${payout_pause_reason ? `: ${payout_pause_reason}` : " for security review."}`
+                        : "Your payouts have been paused."}
+              </strong>
+              {payout_pause_source === "stripe" && (
+                <>
+                  {" "}
+                  Please check your <a href="/settings/payments">Payment Settings</a> for verification requirements.
+                </>
+              )}
             </p>
           </div>
         ) : null}

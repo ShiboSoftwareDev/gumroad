@@ -34,7 +34,14 @@
       Email us and we can look into it for you.</p>
     <h3>Reason 4: There is an issue with your verification</h3>
     <figure><%= image_tag "help_center/stripe-verification-ui.png" %></figure>
-    <p>Payouts may be paused by our payment processor if you have not completed your account's identity or business verification. You can check your <a href="https://gumroad.com/settings/payments">Payment Settings</a> page for details on what is missing or why your verification is failing.</p>
+    <p>Payouts may be paused by our payment processor (Stripe) if you have not completed your account's identity or business verification. When this happens, you'll see a message indicating that your payouts were paused by our payment processor. You can check your <a href="https://gumroad.com/settings/payments">Payment Settings</a> page for details on what is missing or why your verification is failing.</p>
+    <p><strong>Types of payout pauses:</strong></p>
+    <ul>
+      <li><strong>Payment processor pause:</strong> Stripe has paused your payouts due to verification requirements or compliance issues. You'll need to update your information in Payment Settings.</li>
+      <li><strong>Gumroad support pause:</strong> Our support team has manually paused your payouts, usually with a specific reason provided. Contact support for more information.</li>
+      <li><strong>Self-pause:</strong> You have chosen to pause your own payouts through your Payment Settings.</li>
+      <li><strong>Security review pause:</strong> Payouts were automatically paused due to unusual activity for security review.</li>
+    </ul>
     <h3>Reason 5: Today <em>might not</em> actually be your pay day</h3>
     <p> We often have creators write in asking why they had not been paid on a Friday, and when we investigate the situation we see that they were not, in fact, supposed to have received money. </p>
     <p> As per <a href="13-getting-paid.html">Getting Paid</a>, we pay out every Friday for all sales made <em>up to the previous Friday</em>. For example:</p>

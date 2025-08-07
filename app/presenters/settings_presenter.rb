@@ -221,6 +221,8 @@ class SettingsPresenter
       formatted_balance_to_forfeit: seller.formatted_balance_to_forfeit(:country_change),
       payouts_paused_internally: seller.payouts_paused_internally?,
       payouts_paused_by_user: seller.payouts_paused_by_user?,
+      payout_pause_source: seller.payout_pause_source,
+      payout_pause_reason: seller.payout_pause_reason,
       payout_threshold_cents: seller.minimum_payout_amount_cents,
       minimum_payout_threshold_cents: seller.minimum_payout_threshold_cents,
       payout_frequency: seller.payout_frequency,
