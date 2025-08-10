@@ -61,7 +61,7 @@ const CollabsPage = ({
             </WithTooltip>
             <p>
               or{" "}
-              <a href="/help/article/341-collaborations.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/341-collaborations" target="_blank" rel="noreferrer">
                 learn more to get started
               </a>
             </p>

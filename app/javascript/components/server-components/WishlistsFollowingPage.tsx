@@ -100,7 +100,7 @@ const WishlistsFollowingPage = ({
             </figure>
             <h2>Follow wishlists that inspire you</h2>
             Bookmark and organize your desired products with ease
-            <a href="/help/article/343-wishlists.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/343-wishlists" target="_blank" rel="noreferrer">
               Learn more about wishlists
             </a>
           </div>

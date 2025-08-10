@@ -64,7 +64,7 @@ const AccountDetailsSection = ({
         <fieldset>
           <legend>
             <label>Account type</label>
-            <a href="/help/article/260-your-payout-settings-page.html">What type of account should I choose?</a>
+            <a href="/help/article/260-your-payout-settings-page">What type of account should I choose?</a>
           </legend>
         </fieldset>
         <div className="radio-buttons" role="radiogroup">
@@ -500,7 +500,7 @@ const AccountDetailsSection = ({
                   <legend>
                     <label htmlFor={`${uid}-business-tax-id`}>Business Tax ID (EIN, or SSN for sole proprietors)</label>
                     <div className="small">
-                      <a href="/help/article/260-your-payout-settings-page.html">I'm not sure what my Tax ID is.</a>
+                      <a href="/help/article/260-your-payout-settings-page">I'm not sure what my Tax ID is.</a>
                     </div>
                   </legend>
                   <input
@@ -1042,7 +1042,7 @@ const AccountDetailsSection = ({
       <fieldset>
         <legend>
           <label>Date of Birth</label>
-          <a href="/help/article/260-your-payout-settings-page.html">Why does Gumroad need this information?</a>
+          <a href="/help/article/260-your-payout-settings-page">Why does Gumroad need this information?</a>
         </legend>
         <div style={{ display: "grid", gap: "var(--spacer-5)", gridAutoFlow: "column", gridAutoColumns: "1fr" }}>
           <fieldset className={cx({ danger: errorFieldNames.has("dob_month") })}>

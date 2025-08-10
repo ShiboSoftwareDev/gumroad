@@ -145,7 +145,7 @@ const ReviewsPage = ({
             <NavigationButton href={Routes.root_url({ host: rootDomain })} color="accent">
               Discover products
             </NavigationButton>
-            <a href="/help/article/344-rate-and-review-your-purchase.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/344-rate-and-review-your-purchase" target="_blank" rel="noreferrer">
               Learn more about reviews.
             </a>
           </div>

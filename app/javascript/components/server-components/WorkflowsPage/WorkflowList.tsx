@@ -98,7 +98,7 @@ const WorkflowList = () => {
             <h2>Automate emails with ease.</h2>
             <h4>Workflows allow you to send scheduled emails to a subset of your audience based on a trigger.</h4>
             {newWorkflowButton}
-            <a href="/help/article/131-using-workflows-to-send-automated-updates.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/131-using-workflows-to-send-automated-updates" target="_blank" rel="noreferrer">
               Learn more about workflows
             </a>
           </div>

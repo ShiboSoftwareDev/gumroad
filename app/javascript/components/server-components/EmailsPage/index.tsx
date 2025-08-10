@@ -164,7 +164,7 @@ export const EmptyStatePlaceholder = ({
     <p>{description}</p>
     <NewEmailButton />
     <p>
-      <a href="/help/article/169-how-to-send-an-update.html" target="_blank" rel="noreferrer">
+      <a href="/help/article/169-how-to-send-an-update" target="_blank" rel="noreferrer">
         Learn more about emails
       </a>
     </p>

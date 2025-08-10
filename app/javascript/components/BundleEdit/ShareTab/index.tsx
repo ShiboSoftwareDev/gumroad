@@ -51,7 +51,7 @@ export const ShareTab = () => {
         <section>
           <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <h2>Gumroad Discover</h2>
-            <a href="/help/article/79-gumroad-discover.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/79-gumroad-discover" target="_blank" rel="noreferrer">
               Learn more
             </a>
           </header>

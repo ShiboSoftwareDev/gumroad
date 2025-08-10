@@ -100,7 +100,7 @@ const AddTeamMembersSection = ({
       <header>
         <h2>Add team members</h2>
         <div>Invite as many team members as you need to help run this account.</div>
-        <a href="/help/article/326-teams-and-roles.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/326-teams-and-roles" target="_blank" rel="noreferrer">
           Learn more
         </a>
       </header>

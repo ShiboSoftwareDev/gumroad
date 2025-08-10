@@ -53,7 +53,7 @@ export const PriceEditor = ({
         open={isPWYW}
         summary={
           <Toggle value={isPWYW} onChange={setIsPWYW}>
-            <a href="/help/article/133-pay-what-you-want-pricing.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/133-pay-what-you-want-pricing" target="_blank" rel="noreferrer">
               Allow customers to pay what they want
             </a>
           </Toggle>

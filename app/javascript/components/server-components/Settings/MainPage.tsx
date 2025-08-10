@@ -512,7 +512,7 @@ const MainPage = (props: Props) => {
             />
             <small>
               Charge customers different amounts depending on the cost of living in their country.{" "}
-              <a href="/help/article/327-purchasing-power-parity.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/327-purchasing-power-parity" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </small>

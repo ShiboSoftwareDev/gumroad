@@ -13,7 +13,7 @@ const CreateApplication = () => (
   <>
     <header id="application-form">
       <h2>Applications</h2>
-      <a href="/help/article/280-create-application-api.html" target="_blank" rel="noreferrer">
+      <a href="/help/article/280-create-application-api" target="_blank" rel="noreferrer">
         Learn more
       </a>
     </header>

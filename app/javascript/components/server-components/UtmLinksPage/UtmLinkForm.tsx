@@ -249,7 +249,7 @@ export const UtmLinkForm = () => {
           <header>
             <p>Create UTM links to track where your traffic is coming from. </p>
             <p>Once set up, simply share the links to see which sources are driving more conversions and revenue.</p>
-            <a href="/help/article/74-the-analytics-dashboard.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/74-the-analytics-dashboard" target="_blank" rel="noreferrer">
               Learn more
             </a>
           </header>

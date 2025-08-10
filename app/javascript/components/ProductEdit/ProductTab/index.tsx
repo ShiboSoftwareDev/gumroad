@@ -217,7 +217,7 @@ export const ProductTab = () => {
                       onChange={(newValue) => updateProduct({ community_chat_enabled: newValue })}
                       help={{
                         label: "Learn more",
-                        url: "/help/article/347-gumroad-community.html",
+                        url: "/help/article/347-gumroad-community",
                       }}
                     />
                   )}
@@ -311,7 +311,7 @@ export const ProductTab = () => {
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                           <h2>Durations</h2>
                           <a
-                            href="https://gumroad.com/help/article/70-can-i-sell-services.html#call"
+                            href="https://gumroad.com/help/article/70-can-i-sell-services#call"
                             target="_blank"
                             rel="noreferrer"
                           >
@@ -347,8 +347,8 @@ export const ProductTab = () => {
                         <a
                           href={
                             product.native_type === "physical"
-                              ? "/help/article/339-product-bundles.html"
-                              : "/help/article/126-setting-up-versions-on-a-digital-product.html"
+                              ? "/help/article/339-product-bundles"
+                              : "/help/article/126-setting-up-versions-on-a-digital-product"
                           }
                         >
                           Learn more
@@ -434,7 +434,7 @@ export const ProductTab = () => {
                       onChange={(newValue) => updateProduct({ is_epublication: newValue })}
                     >
                       Mark product as e-publication for VAT purposes{" "}
-                      <a href="/help/article/10-dealing-with-vat.html" target="_blank" rel="noreferrer">
+                      <a href="/help/article/10-dealing-with-vat" target="_blank" rel="noreferrer">
                         Learn more
                       </a>
                     </Toggle>

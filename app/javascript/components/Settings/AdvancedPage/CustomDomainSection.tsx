@@ -14,7 +14,7 @@ const CustomDomainSection = ({
   <section>
     <header>
       <h2>Custom domain</h2>
-      <a href="/help/article/153-setting-up-a-custom-domain.html" target="_blank" rel="noreferrer">
+      <a href="/help/article/153-setting-up-a-custom-domain" target="_blank" rel="noreferrer">
         Learn more
       </a>
     </header>

@@ -475,7 +475,7 @@ const DiscountsPage = ({
               <h2>No discounts yet</h2>
               <p>Use discounts to create sweet deals for your customers</p>
               <p>
-                <a href="/help/article/128-discount-codes.html" target="_blank" rel="noreferrer">
+                <a href="/help/article/128-discount-codes" target="_blank" rel="noreferrer">
                   Learn more about discount codes
                 </a>
               </p>
@@ -834,7 +834,7 @@ const Form = ({
                 the discount.
               </div>
               <div>
-                <a href="/help/article/128-discount-codes.html" target="_blank" rel="noreferrer">
+                <a href="/help/article/128-discount-codes" target="_blank" rel="noreferrer">
                   Learn more
                 </a>
               </div>

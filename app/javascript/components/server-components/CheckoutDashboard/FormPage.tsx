@@ -117,7 +117,7 @@ const FormPage = ({
         <section className="paragraphs">
           <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <h2>Custom fields</h2>
-            <a href="/help/article/101-designing-your-product-page.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/101-designing-your-product-page" target="_blank" rel="noreferrer">
               Learn more
             </a>
           </header>
@@ -253,7 +253,7 @@ const FormPage = ({
         <section className="paragraphs">
           <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <h2>Discounts</h2>
-            <a href="/help/article/128-discount-codes.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/128-discount-codes" target="_blank" rel="noreferrer">
               Learn more
             </a>
           </header>
@@ -282,7 +282,7 @@ const FormPage = ({
         <section className="paragraphs">
           <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <h2>More like this recommendations</h2>
-            <a href="/help/article/334-more-like-this.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/334-more-like-this" target="_blank" rel="noreferrer">
               Learn more
             </a>
           </header>
@@ -328,7 +328,7 @@ const FormPage = ({
               />
               <span>
                 Recommend all products and earn a commission with{" "}
-                <a href="/help/article/249-affiliate-faq.html" target="_blank" rel="noreferrer">
+                <a href="/help/article/249-affiliate-faq" target="_blank" rel="noreferrer">
                   Gumroad Affiliates
                 </a>
               </span>
@@ -338,7 +338,7 @@ const FormPage = ({
         <section className="paragraphs">
           <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <h2>Tipping</h2>
-            <a href="/help/article/345-tipping.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/345-tipping" target="_blank" rel="noreferrer">
               Learn more
             </a>
           </header>

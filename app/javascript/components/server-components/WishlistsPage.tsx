@@ -136,7 +136,7 @@ const WishlistsPage = ({
             </figure>
             <h2>Save products you are wishing for</h2>
             Bookmark and organize your desired products with ease
-            <a href="/help/article/343-wishlists.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/343-wishlists" target="_blank" rel="noreferrer">
               Learn more about wishlists
             </a>
           </div>

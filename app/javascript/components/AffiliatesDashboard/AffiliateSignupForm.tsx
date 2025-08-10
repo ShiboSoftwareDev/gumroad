@@ -124,7 +124,7 @@ export const AffiliateSignupForm = () => {
                 Anyone can request to become your affiliate by using your affiliate link. Affiliates will earn a
                 commission on each sale they refer.
               </div>
-              <a href="/help/article/249-affiliate-faq.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/249-affiliate-faq" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </header>
@@ -188,7 +188,7 @@ export const AffiliateSignupForm = () => {
                 Being part of Gumroad Affiliate Program enables other creators to share your products in exchange for a{" "}
                 {data.global_affiliate_percentage}% commission.
               </div>
-              <a href="/help/article/249-affiliate-faq.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/249-affiliate-faq" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </header>

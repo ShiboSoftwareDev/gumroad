@@ -75,7 +75,7 @@ const CustomDomain = ({
       <legend>
         <label htmlFor={uid}>{label}</label>
         {includeLearnMoreLink ? (
-          <a href="/help/article/153-setting-up-a-custom-domain.html" target="_blank" rel="noreferrer">
+          <a href="/help/article/153-setting-up-a-custom-domain" target="_blank" rel="noreferrer">
             Learn more
           </a>
         ) : null}

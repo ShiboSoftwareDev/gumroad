@@ -37,7 +37,7 @@ const AccountDeletionSection = (props: Props) => {
         <h2>Danger Zone</h2>
       </header>
       <p>
-        <a href="/help/article/37-how-to-delete-your-gumroad-account.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/37-how-to-delete-your-gumroad-account" target="_blank" rel="noreferrer">
           Deleting your account
         </a>{" "}
         will permanently delete all of your products and product files, as well as any credit card and payout
@@ -76,7 +76,7 @@ const AccountDeletionSection = (props: Props) => {
         </p>
         <p>
           For more information, see{" "}
-          <a href="/help/article/37-how-to-delete-your-gumroad-account.html" target="_blank" rel="noreferrer">
+          <a href="/help/article/37-how-to-delete-your-gumroad-account" target="_blank" rel="noreferrer">
             here
           </a>
           .

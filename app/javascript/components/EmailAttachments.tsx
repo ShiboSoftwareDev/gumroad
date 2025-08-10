@@ -217,7 +217,7 @@ export const EmailAttachments = ({
       {hasStreamableFiles ? (
         <Toggle value={isStreamOnly} onChange={setIsStreamOnly}>
           Disable file downloads (stream only)
-          <a href="/help/article/43-streaming-videos.html" target="_blank" rel="noreferrer">
+          <a href="/help/article/43-streaming-videos" target="_blank" rel="noreferrer">
             Learn more
           </a>
         </Toggle>

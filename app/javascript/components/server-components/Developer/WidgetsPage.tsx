@@ -54,7 +54,7 @@ export const WidgetsPage = ({ display_product_select, products, affiliated_produ
             <p>
               You can easily bring the Gumroad purchase page right into your site, without directing your buyers
               elsewhere.{" "}
-              <a href="/help/article/44-build-gumroad-into-your-website.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/44-build-gumroad-into-your-website" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </p>
@@ -74,7 +74,7 @@ export const WidgetsPage = ({ display_product_select, products, affiliated_produ
               <h3>Subscribe form</h3>
               <p>
                 Share your subscribe form on any website or blog using an embed or URL.{" "}
-                <a href="/help/article/170-audience.html" target="_blank" rel="noreferrer">
+                <a href="/help/article/170-audience" target="_blank" rel="noreferrer">
                   Learn more
                 </a>
               </p>

@@ -40,7 +40,7 @@ export const CreditCardForm = ({ card, can_remove, read_only }: Props) => {
     <section>
       <header>
         <h2>Saved credit card</h2>
-        <a href="/help/article/216-delete-credit-card-information.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/216-delete-credit-card-information" target="_blank" rel="noreferrer">
           Learn more.
         </a>
       </header>

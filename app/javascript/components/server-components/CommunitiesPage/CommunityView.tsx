@@ -879,7 +879,7 @@ const EmptyCommunitiesPlaceholder = ({ hasProducts }: { hasProducts: boolean }) 
         </NavigationButton>
         <p>
           or{" "}
-          <a href="/help/article/347-gumroad-community.html" target="_blank" rel="noreferrer">
+          <a href="/help/article/347-gumroad-community" target="_blank" rel="noreferrer">
             learn more about community chats
           </a>
         </p>

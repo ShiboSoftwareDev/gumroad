@@ -146,7 +146,7 @@ export const ProductTab = () => {
             </Toggle>
             <Toggle value={bundle.is_epublication} onChange={(newValue) => updateBundle({ is_epublication: newValue })}>
               Mark product as e-publication for VAT purposes{" "}
-              <a href="/help/article/10-dealing-with-vat.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/10-dealing-with-vat" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </Toggle>

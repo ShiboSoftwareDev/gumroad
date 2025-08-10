@@ -47,7 +47,7 @@ const PayPalConnectSection = ({
     <section>
       <header>
         <h2>PayPal</h2>
-        <a href="/help/article/275-paypal-connect.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/275-paypal-connect" target="_blank" rel="noreferrer">
           Learn more
         </a>
       </header>

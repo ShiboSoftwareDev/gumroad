@@ -76,7 +76,7 @@ export const ThumbnailEditor = ({
     <section>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2>Thumbnail</h2>
-        <a href="/help/article/60-adding-a-cover-image.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/60-adding-a-cover-image" target="_blank" rel="noreferrer">
           Learn more
         </a>
       </div>

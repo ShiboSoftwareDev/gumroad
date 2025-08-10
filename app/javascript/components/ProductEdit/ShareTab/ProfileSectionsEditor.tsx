@@ -25,7 +25,7 @@ export const ProfileSectionsEditor = ({
       <header>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h2>Profile</h2>
-          <a href="/help/article/124-your-gumroad-profile-page.html" target="_blank" rel="noreferrer">
+          <a href="/help/article/124-your-gumroad-profile-page" target="_blank" rel="noreferrer">
             Learn more
           </a>
         </div>

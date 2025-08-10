@@ -115,7 +115,7 @@ const MoreLikeThisNodeView = ({ editor, node, extension, selected }: NodeViewPro
                             onChange={() => handleRecommendationTypeChange("gumroad_affiliates_products")}
                           />
                           All products via
-                          <a href="/help/article/249-affiliate-faq.html" target="_blank" rel="noreferrer">
+                          <a href="/help/article/249-affiliate-faq" target="_blank" rel="noreferrer">
                             Gumroad Affiliates
                           </a>
                         </label>

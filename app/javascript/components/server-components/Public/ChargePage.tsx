@@ -22,7 +22,7 @@ const ChargePage = () => (
       <section>
         <header>
           <h2>
-            <a href="/help/article/214-why-was-i-charged-by-gumroad.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/214-why-was-i-charged-by-gumroad" target="_blank" rel="noreferrer">
               Can I get a refund?
             </a>
           </h2>

@@ -29,7 +29,7 @@ const DiscoverLinkSection = ({
       <header>
         <h2>Affiliate link</h2>
         <p>Earn 10% for each referral sale made by your link.</p>
-        <a href="/help/article/333-affiliates-on-gumroad.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/333-affiliates-on-gumroad" target="_blank" rel="noreferrer">
           Learn more
         </a>
       </header>

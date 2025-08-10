@@ -329,7 +329,7 @@ const AffiliatedPage = ({
               </WithTooltip>
               <p>
                 or{" "}
-                <a href="/help/article/249-affiliate-faq.html" target="_blank" rel="noreferrer">
+                <a href="/help/article/249-affiliate-faq" target="_blank" rel="noreferrer">
                   learn more to get started
                 </a>
               </p>

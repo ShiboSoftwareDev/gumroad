@@ -949,7 +949,7 @@ const PaymentsPage = (props: Props) => {
           <header>
             <h2>Payout method</h2>
             <div>
-              <a href="/help/article/260-your-payout-settings-page.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/260-your-payout-settings-page" target="_blank" rel="noreferrer">
                 Any questions about these payout settings?
               </a>
             </div>

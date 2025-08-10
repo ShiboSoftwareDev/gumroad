@@ -247,7 +247,7 @@ export const FollowersPage = ({ followers: initialFollowers, per_page, total }: 
                 ) : null}
                 <p>
                   or{" "}
-                  <a href="/help/article/170-audience.html" target="_blank" rel="noreferrer">
+                  <a href="/help/article/170-audience" target="_blank" rel="noreferrer">
                     learn more about the audience dashboard
                   </a>
                 </p>

@@ -42,7 +42,7 @@ const BlockEmailsSection = ({ blockedEmails, setBlockedEmails }: Props) => {
     <section>
       <header>
         <h2>Mass-block emails</h2>
-        <a href="/help/article/329-customer-moderation.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/329-customer-moderation" target="_blank" rel="noreferrer">
           Learn more
         </a>
       </header>

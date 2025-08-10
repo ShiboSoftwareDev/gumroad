@@ -282,7 +282,7 @@ const NewProductPage = ({
                   to start selling. Whether it's digital downloads, online courses, or memberships — see what sticks.
                   <br />
                   <br />
-                  <a href="/help/article/64-is-gumroad-for-me.html" target="_blank" rel="noreferrer">
+                  <a href="/help/article/64-is-gumroad-for-me" target="_blank" rel="noreferrer">
                     Need help adding a product?
                   </a>
                 </p>
@@ -298,7 +298,7 @@ const NewProductPage = ({
                     <strong>New.</strong> You can create your product using AI now. Click the sparks button in the
                     header to get started.
                     <br />
-                    <a href="/help/article/149-adding-a-product.html" target="_blank" rel="noreferrer">
+                    <a href="/help/article/149-adding-a-product" target="_blank" rel="noreferrer">
                       Learn more
                     </a>
                   </div>

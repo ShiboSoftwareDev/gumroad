@@ -216,7 +216,7 @@ const AnalyticsPage = ({
               You don't have any sales yet. Once you do, you'll see them here, along with powerful data that can help
               you see what's working, and what could be working better.
             </p>
-            <a href="/help/article/74-the-analytics-dashboard.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/74-the-analytics-dashboard" target="_blank" rel="noreferrer">
               Learn more about the analytics dashboard.
             </a>
           </div>

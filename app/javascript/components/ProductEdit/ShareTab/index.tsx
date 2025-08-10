@@ -66,7 +66,7 @@ export const ShareTab = () => {
           <section>
             <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <h2>Gumroad Discover</h2>
-              <a href="/help/article/79-gumroad-discover.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/79-gumroad-discover" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </header>
@@ -100,7 +100,7 @@ export const ShareTab = () => {
               </Toggle>
               <Toggle value={product.is_adult} onChange={(newValue) => updateProduct({ is_adult: newValue })}>
                 This product contains content meant{" "}
-                <a href="/help/article/156-gumroad-and-adult-content.html" target="_blank" rel="noreferrer">
+                <a href="/help/article/156-gumroad-and-adult-content" target="_blank" rel="noreferrer">
                   only for adults,
                 </a>{" "}
                 including the preview
@@ -127,11 +127,11 @@ const DiscoverEligibilityPromo = () => {
       <img src={hands} />
       <div>
         To appear on Gumroad Discover, make sure to meet all the{" "}
-        <a href="/help/article/79-gumroad-discover.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/79-gumroad-discover" target="_blank" rel="noreferrer">
           eligibility criteria
         </a>
         , which includes completing the Risk Review process explained in detail{" "}
-        <a href="/help/article/13-getting-paid.html" target="_blank" rel="noreferrer">
+        <a href="/help/article/13-getting-paid" target="_blank" rel="noreferrer">
           here
         </a>
         .

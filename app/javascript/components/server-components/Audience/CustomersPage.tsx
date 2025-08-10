@@ -556,7 +556,7 @@ const CustomersPage = ({
                 </div>
                 <p>
                   or{" "}
-                  <a href="/help/article/268-customer-dashboard.html" target="_blank" rel="noreferrer">
+                  <a href="/help/article/268-customer-dashboard" target="_blank" rel="noreferrer">
                     learn more about the audience dashboard
                   </a>
                 </p>
@@ -2174,7 +2174,7 @@ const RefundForm = ({
           <div role="status" className="info">
             <p>
               Going forward, Gumroad does not return any fees when a payment is refunded.{" "}
-              <a href="/help/article/47-how-to-refund-a-customer.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/47-how-to-refund-a-customer" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </p>

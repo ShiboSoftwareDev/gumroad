@@ -45,7 +45,7 @@ export const RefundPolicySelector = ({
       summary={
         <Toggle value={isEnabled} onChange={setIsEnabled}>
           Specify a refund policy for this product{" "}
-          <a href="/help/article/335-custom-refund-policy.html" target="_blank" rel="noreferrer">
+          <a href="/help/article/335-custom-refund-policy" target="_blank" rel="noreferrer">
             Learn more
           </a>
         </Toggle>

@@ -301,7 +301,7 @@ const UpsellsPage = (props: {
             <Button color="accent" onClick={() => setView("create")}>
               New upsell
             </Button>
-            <a href="/help/article/331-creating-upsells.html" target="_blank" rel="noreferrer">
+            <a href="/help/article/331-creating-upsells" target="_blank" rel="noreferrer">
               Learn more about upsells.
             </a>
           </div>
@@ -645,7 +645,7 @@ const Form = ({
           <section>
             <p>
               When a customer clicks "Pay", offer a version upgrade or another product with or without a discount.{" "}
-              <a href="/help/article/331-creating-upsells.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/331-creating-upsells" target="_blank" rel="noreferrer">
                 Learn more
               </a>
             </p>

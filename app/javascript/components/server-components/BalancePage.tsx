@@ -347,7 +347,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
                 <div>
                   <h4>
                     Discover sales{" "}
-                    <a href="/help/article/66-gumroads-fees.html" target="_blank" rel="noreferrer">
+                    <a href="/help/article/66-gumroads-fees" target="_blank" rel="noreferrer">
                       fees
                     </a>
                   </h4>
@@ -364,7 +364,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
                 <div>
                   <h4>
                     Direct sales{" "}
-                    <a href="/help/article/66-gumroads-fees.html" target="_blank" rel="noreferrer">
+                    <a href="/help/article/66-gumroads-fees" target="_blank" rel="noreferrer">
                       fees
                     </a>
                   </h4>
@@ -380,7 +380,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
         ) : (
           <div>
             <h4>
-              <a href="/help/article/66-gumroads-fees.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/66-gumroads-fees" target="_blank" rel="noreferrer">
                 Fees
               </a>
             </h4>
@@ -396,7 +396,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
         {payoutPeriodData.chargebacks_cents !== 0 ? (
           <div>
             <h4>
-              <a href="/help/article/134-how-does-gumroad-handle-chargebacks.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/134-how-does-gumroad-handle-chargebacks" target="_blank" rel="noreferrer">
                 Chargebacks
               </a>
             </h4>
@@ -406,7 +406,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
         {payoutPeriodData.credits_cents < 0 ? (
           <div>
             <h4>
-              <a href="/help/article/269-balance-page.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/269-balance-page" target="_blank" rel="noreferrer">
                 Credits
               </a>
             </h4>
@@ -428,7 +428,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
         {payoutPeriodData.paypal_payout_cents !== 0 ? (
           <div>
             <h4>
-              <a href="/help/article/275-paypal-connect.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/275-paypal-connect" target="_blank" rel="noreferrer">
                 PayPal payouts
               </a>
             </h4>
@@ -438,7 +438,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
         {payoutPeriodData.stripe_connect_payout_cents !== 0 ? (
           <div>
             <h4>
-              <a href="/help/article/330-stripe-connect.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/330-stripe-connect" target="_blank" rel="noreferrer">
                 Stripe Connect payouts
               </a>
             </h4>
@@ -448,7 +448,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
         {payoutPeriodData.taxes_cents !== 0 ? (
           <div>
             <h4>
-              <a href="/help/article/121-sales-tax-on-gumroad.html" target="_blank" rel="noreferrer">
+              <a href="/help/article/121-sales-tax-on-gumroad" target="_blank" rel="noreferrer">
                 Taxes
               </a>
             </h4>
@@ -506,7 +506,7 @@ const PeriodEmpty = ({ minimumPayoutAmountCents }: { minimumPayoutAmountCents: n
         symbolFormat: "short",
       })}{" "}
       to be paid out for your sales.
-      <NavigationButton color="accent" href="/help/article/269-balance-page.html">
+      <NavigationButton color="accent" href="/help/article/269-balance-page">
         Learn about payouts
       </NavigationButton>
     </div>

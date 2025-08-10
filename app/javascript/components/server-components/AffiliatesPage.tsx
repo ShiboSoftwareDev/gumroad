@@ -783,7 +783,7 @@ const Form = ({ title, headerLabel, submitLabel }: FormProps) => {
                 <th>Product</th>
                 <th>Commission</th>
                 <th>
-                  <a href="/help/article/333-affiliates-on-gumroad.html" target="_blank" rel="noreferrer">
+                  <a href="/help/article/333-affiliates-on-gumroad" target="_blank" rel="noreferrer">
                     Destination URL (optional)
                   </a>
                 </th>
@@ -905,7 +905,7 @@ const routes: RouteObject[] = [
     element: (
       <Form
         title="New Affiliate"
-        headerLabel="Add a new affiliate below and we'll send them a unique link to share with their audience. Your affiliate will then earn a commission on each sale they refer. <a href='/help/article/333-affiliates-on-gumroad.html' target='_blank' rel='noreferrer'>Learn more</a>"
+        headerLabel="Add a new affiliate below and we'll send them a unique link to share with their audience. Your affiliate will then earn a commission on each sale they refer. <a href='/help/article/333-affiliates-on-gumroad' target='_blank' rel='noreferrer'>Learn more</a>"
         submitLabel="Add affiliate"
       />
     ),
@@ -933,7 +933,7 @@ const routes: RouteObject[] = [
     element: (
       <Form
         title="Edit Affiliate"
-        headerLabel="The process of editing is almost identical to adding them. You can change their affiliate fee, the products they are assigned. Their affiliate link will not change. <a href='/help/article/333-affiliates-on-gumroad.html' target='_blank' rel='noreferrer'>Learn more</a>"
+        headerLabel="The process of editing is almost identical to adding them. You can change their affiliate fee, the products they are assigned. Their affiliate link will not change. <a href='/help/article/333-affiliates-on-gumroad' target='_blank' rel='noreferrer'>Learn more</a>"
         submitLabel="Save changes"
       />
     ),

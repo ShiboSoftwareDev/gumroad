@@ -24,7 +24,7 @@ describe "UTM links", :js, type: :feature do
 
         expect(page).to have_text("No links yet")
         expect(page).to have_text("Use UTM links to track which sources are driving the most conversions and revenue")
-        expect(find("a", text: "Learn more about UTM tracking")[:href]).to eq("/help/article/74-the-analytics-dashboard.html")
+        expect(find("a", text: "Learn more about UTM tracking")[:href]).to eq("/help/article/74-the-analytics-dashboard")
       end
 
       it "shows UTM links" do
@@ -387,7 +387,7 @@ describe "UTM links", :js, type: :feature do
         expect(page).to have_link("Cancel", href: utm_links_dashboard_path)
         expect(page).to have_text("Create UTM links to track where your traffic is coming from")
         expect(page).to have_text("Once set up, simply share the links to see which sources are driving more conversions and revenue")
-        expect(find("a", text: "Learn more")[:href]).to eq("/help/article/74-the-analytics-dashboard.html")
+        expect(find("a", text: "Learn more")[:href]).to eq("/help/article/74-the-analytics-dashboard")
 
         expect(page).to have_input_labelled("Title", with: "")
         find(:label, "Destination").click
