@@ -747,9 +747,7 @@ const BalancePage = ({
                 {instant_payout.payable_balances.some(
                   (balance) => balance.amount_cents > MAXIMUM_INSTANT_PAYOUT_AMOUNT_CENTS,
                 ) ? (
-                  <a href="mailto:support@gumroad.com?subject=Instant%20payout%20request">
-                    Contact us for an instant payout
-                  </a>
+                  <a href={Routes.support_index_path()}>Contact us for an instant payout</a>
                 ) : (
                   <Button
                     small

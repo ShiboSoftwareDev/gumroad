@@ -9,6 +9,7 @@ class SupportController < Sellers::BaseController
       email: current_seller.email,
       emailHash: helper_widget_email_hmac(timestamp),
       timestamp: timestamp,
+      customerMetadata: helper_customer_metadata,
     }
 
     @props = {

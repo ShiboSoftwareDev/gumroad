@@ -345,11 +345,9 @@ export const ProductTab = () => {
                       <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <h2>{product.native_type === "physical" ? "Variants" : "Versions"}</h2>
                         <a
-                          href={
-                            product.native_type === "physical"
-                              ? "/help/article/339-product-bundles"
-                              : "/help/article/126-setting-up-versions-on-a-digital-product"
-                          }
+                          href="/help/article/126-setting-up-versions-on-a-digital-product"
+                          target="_blank"
+                          rel="noreferrer"
                         >
                           Learn more
                         </a>
