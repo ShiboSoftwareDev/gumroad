@@ -217,7 +217,7 @@ export const ProductTab = () => {
                       onChange={(newValue) => updateProduct({ community_chat_enabled: newValue })}
                       help={{
                         label: "Learn more",
-                        dataHelperPrompt: "What is Gumroad community chat?",
+                        url: "/help/article/347-gumroad-community.html",
                       }}
                     />
                   )}
@@ -345,10 +345,10 @@ export const ProductTab = () => {
                       <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <h2>{product.native_type === "physical" ? "Variants" : "Versions"}</h2>
                         <a
-                          data-helper-prompt={
+                          href={
                             product.native_type === "physical"
-                              ? "Can you tell me more about variants?"
-                              : "Can you tell me more about versions?"
+                              ? "/help/article/339-product-bundles.html"
+                              : "/help/article/126-setting-up-versions-on-a-digital-product.html"
                           }
                         >
                           Learn more
@@ -434,7 +434,9 @@ export const ProductTab = () => {
                       onChange={(newValue) => updateProduct({ is_epublication: newValue })}
                     >
                       Mark product as e-publication for VAT purposes{" "}
-                      <a data-helper-prompt="Can you explain how VAT works for e-publications?">Learn more</a>
+                      <a href="/help/article/10-dealing-with-vat.html" target="_blank" rel="noreferrer">
+                        Learn more
+                      </a>
                     </Toggle>
                   ) : null}
                   {!seller_refund_policy_enabled ? (
