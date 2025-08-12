@@ -203,9 +203,9 @@ class Payment < ApplicationRecord
     }
 
     if options[:include_sales]
-      json[:sales] = successful_sales.map { |sale| sale.as_json(version: 2) }
-      json[:refunded_sales] = refunded_sales.map { |sale| sale.as_json(version: 2) }
-      json[:disputed_sales] = disputed_sales.map { |sale| sale.as_json(version: 2) }
+      json[:sales] = successful_sales.map(&:external_id)
+      json[:refunded_sales] = refunded_sales.map(&:external_id)
+      json[:disputed_sales] = disputed_sales.map(&:external_id)
     end
 
     json
@@ -213,8 +213,6 @@ class Payment < ApplicationRecord
 
   def successful_sales
     Purchase.where(purchase_success_balance_id: balance_ids)
-            .not_chargedback_or_chargedback_reversed
-            .not_fully_refunded
             .includes(:link)
             .distinct
             .order(created_at: :desc, id: :desc)

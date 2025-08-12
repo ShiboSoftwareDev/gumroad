@@ -392,7 +392,7 @@ describe Payment do
     let(:balance) { create(:balance, user: user) }
     let(:payment) { create(:payment, user: user, balances: [balance], payout_period_end_date: 3.days.ago) }
 
-    it "includes only successful sales that are not refunded or chargedback" do
+    it "includes all successful sales" do
       successful_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance)
       refunded_sale = create(:purchase, :refunded, seller: user, link: product, purchase_success_balance: balance)
       chargedback_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance, chargeback_date: 1.day.ago)
@@ -400,9 +400,9 @@ describe Payment do
       sales = payment.successful_sales
 
       expect(sales).to include(successful_sale)
-      expect(sales).not_to include(refunded_sale)
-      expect(sales).not_to include(chargedback_sale)
-      expect(sales.length).to eq(1)
+      expect(sales).to include(refunded_sale)
+      expect(sales).to include(chargedback_sale)
+      expect(sales.length).to eq(3)
     end
 
     it "returns sales sorted by created_at desc" do
@@ -623,7 +623,7 @@ describe Payment do
       end
 
       context "when include_sales is true" do
-        it "includes sales, refunded_sales, and disputed_sales data" do
+        it "includes sales, refunded_sales, and disputed_sales ids" do
           successful_sale = create(:purchase, seller: user, link: product, purchase_success_balance: balance)
           refunded_sale = create(:purchase, :refunded, seller: user, link: product, purchase_refund_balance: balance)
           chargedback_sale = create(:purchase, seller: user, link: product, purchase_chargeback_balance: balance, chargeback_date: 1.day.ago)
@@ -638,18 +638,14 @@ describe Payment do
           expect(json[:refunded_sales].length).to eq(1)
           expect(json[:disputed_sales].length).to eq(1)
 
-          expect(json[:sales].first).to be_a(Hash)
-          expect(json[:sales].first).to have_key(:id)
-          expect(json[:sales].first).to have_key(:product_name)
-          expect(json[:sales].first[:product_name]).to eq(product.name)
+          expect(json[:sales].first).to be_a(String)
+          expect(json[:sales].first).to eq(successful_sale.external_id)
 
-          expect(json[:refunded_sales].first).to be_a(Hash)
-          expect(json[:refunded_sales].first).to have_key(:id)
-          expect(json[:refunded_sales].first).to have_key(:product_name)
+          expect(json[:refunded_sales].first).to be_a(String)
+          expect(json[:refunded_sales].first).to eq(refunded_sale.external_id)
 
-          expect(json[:disputed_sales].first).to be_a(Hash)
-          expect(json[:disputed_sales].first).to have_key(:id)
-          expect(json[:disputed_sales].first).to have_key(:product_name)
+          expect(json[:disputed_sales].first).to be_a(String)
+          expect(json[:disputed_sales].first).to eq(chargedback_sale.external_id)
         end
 
         it "includes empty arrays when no sales of each type exist" do
