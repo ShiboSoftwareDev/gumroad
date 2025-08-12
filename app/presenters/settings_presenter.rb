@@ -376,7 +376,8 @@ class SettingsPresenter
       end
 
       {
-        allow_paypal_connect: Pundit.policy!(pundit_user, [:settings, :payments, seller]).paypal_connect? && seller.paypal_connect_enabled?,
+        show_paypal_connect: Pundit.policy!(pundit_user, [:settings, :payments, seller]).paypal_connect? && seller.paypal_connect_enabled?,
+        allow_paypal_connect: seller.paypal_connect_allowed?,
         unsupported_countries: PaypalMerchantAccountManager::COUNTRY_CODES_NOT_SUPPORTED_BY_PCP.map { |code| ISO3166::Country[code].common_name },
         email: paypal_merchant_account_email,
         charge_processor_merchant_id: paypal_merchant_account&.charge_processor_merchant_id,
@@ -405,7 +406,7 @@ class SettingsPresenter
 
       discover_fee_percent = (Purchase::GUMROAD_DISCOVER_FEE_PER_THOUSAND / 10.0).round(1)
       discover_fee_percent = discover_fee_percent.to_i == discover_fee_percent ? discover_fee_percent.to_i : discover_fee_percent
-      direct_fee_percent = (Purchase::GUMROAD_FLAT_FEE_PER_THOUSAND / 10.0).round(1)
+      direct_fee_percent = ((seller.custom_fee_per_thousand.presence || Purchase::GUMROAD_FLAT_FEE_PER_THOUSAND) / 10.0).round(1)
       direct_fee_percent = direct_fee_percent.to_i == direct_fee_percent ? direct_fee_percent.to_i : direct_fee_percent
       fixed_fee_cents = Purchase::GUMROAD_FIXED_FEE_CENTS
 
