@@ -6,6 +6,7 @@ import {
   useCreateConversation,
   MessageContent,
 } from "@helperai/react";
+import placeholderImage from "images/placeholders/support.png";
 import debounce from "lodash/debounce";
 import React from "react";
 
@@ -17,14 +18,26 @@ export default function SupportPortal() {
   const [isNewTicketOpen, setIsNewTicketOpen] = React.useState(false);
 
   return (
-    <div className="mx-auto max-w-5xl">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Support</h1>
-        <Button onClick={() => setIsNewTicketOpen(true)}>New ticket</Button>
-      </div>
+    <main>
+      <header>
+        <h1>Help</h1>
+        <div className="actions">
+          <Button color="accent" onClick={() => setIsNewTicketOpen(true)}>
+            New ticket
+          </Button>
+        </div>
+        <div role="tablist">
+          <a href={Routes.help_center_root_path()} role="tab" aria-selected={false} className="pb-2">
+            Help
+          </a>
+          <a href={Routes.support_index_path()} role="tab" aria-selected className="border-b-2 pb-2">
+            Support
+          </a>
+        </div>
+      </header>
 
       {selectedConversationSlug == null ? (
-        <ConversationList onSelect={setSelectedConversationSlug} />
+        <ConversationList onSelect={setSelectedConversationSlug} onOpenNewTicket={() => setIsNewTicketOpen(true)} />
       ) : (
         <ConversationDetail
           conversationSlug={selectedConversationSlug}
@@ -40,11 +53,17 @@ export default function SupportPortal() {
           setSelectedConversationSlug(slug);
         }}
       />
-    </div>
+    </main>
   );
 }
 
-function ConversationList({ onSelect }: { onSelect: (slug: string) => void }) {
+function ConversationList({
+  onSelect,
+  onOpenNewTicket,
+}: {
+  onSelect: (slug: string) => void;
+  onOpenNewTicket: () => void;
+}) {
   const { data, isLoading, error, refetch } = useConversations();
 
   const refresh = React.useMemo(() => debounce(() => void refetch(), 300), [refetch]);
@@ -56,10 +75,30 @@ function ConversationList({ onSelect }: { onSelect: (slug: string) => void }) {
     return () => clearInterval(id);
   }, [refresh]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return null;
   if (error) return <div>Something went wrong.</div>;
 
   const conversations = data?.conversations ?? [];
+
+  if (conversations.length === 0) {
+    return (
+      <section>
+        <div className="placeholder">
+          <figure>
+            <img src={placeholderImage} />
+          </figure>
+          <h2>Need a hand? We're here for you.</h2>
+          <p>
+            Got a question about selling, payouts, or your products? Send us a message and we'll reply right here so you
+            can get back to creating.
+          </p>
+          <Button color="accent" onClick={onOpenNewTicket}>
+            Contact support
+          </Button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <div className="overflow-x-auto rounded border">

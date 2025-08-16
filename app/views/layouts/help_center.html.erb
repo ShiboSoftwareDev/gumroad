@@ -33,6 +33,16 @@
             <span class="icon icon-solid-search"></span>
           <% end %>
         <% end %>
+      </div>
+
+      <div role="tablist">
+        <%= link_to help_center_root_path, role: "tab", aria: { selected: true } do %>
+          Help
+        <% end %>
+        <%= link_to support_index_path, role: "tab", aria: { selected: false } do %>
+          Support
+        <% end %>
+      </div>
     </header>
     <section class="paragraphs">
       <%= yield %>
