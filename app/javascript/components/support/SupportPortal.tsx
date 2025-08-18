@@ -12,28 +12,18 @@ import React from "react";
 
 import { Button } from "$app/components/Button";
 import { Modal } from "$app/components/Modal";
+import { SupportHeader } from "$app/components/server-components/support/Header";
+import { useOriginalLocation } from "$app/components/useOriginalLocation";
 
 export default function SupportPortal() {
   const [selectedConversationSlug, setSelectedConversationSlug] = React.useState<string | null>(null);
-  const [isNewTicketOpen, setIsNewTicketOpen] = React.useState(false);
+  const { searchParams } = new URL(useOriginalLocation());
+  const [isNewTicketOpen, setIsNewTicketOpen] = React.useState(!!searchParams.get("new_ticket"));
 
   return (
     <main>
       <header>
-        <h1>Help</h1>
-        <div className="actions">
-          <Button color="accent" onClick={() => setIsNewTicketOpen(true)}>
-            New ticket
-          </Button>
-        </div>
-        <div role="tablist">
-          <a href={Routes.help_center_root_path()} role="tab" aria-selected={false} className="pb-2">
-            Help
-          </a>
-          <a href={Routes.support_index_path()} role="tab" aria-selected className="border-b-2 pb-2">
-            Support
-          </a>
-        </div>
+        <SupportHeader onOpenNewTicket={() => setIsNewTicketOpen(true)} />
       </header>
 
       {selectedConversationSlug == null ? (
