@@ -7,10 +7,13 @@ import {
   MessageContent,
 } from "@helperai/react";
 import placeholderImage from "images/placeholders/support.png";
-import debounce from "lodash/debounce";
-import React from "react";
+import React, { useEffect } from "react";
+
+import FileUtils from "$app/utils/file";
 
 import { Button } from "$app/components/Button";
+import { FileRowContent } from "$app/components/FileRowContent";
+import { Icon } from "$app/components/Icons";
 import { Modal } from "$app/components/Modal";
 import { SupportHeader } from "$app/components/server-components/support/Header";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
@@ -20,21 +23,28 @@ export default function SupportPortal() {
   const { searchParams } = new URL(useOriginalLocation());
   const [isNewTicketOpen, setIsNewTicketOpen] = React.useState(!!searchParams.get("new_ticket"));
 
+  useEffect(() => {
+    if (!isNewTicketOpen && new URL(location.href).searchParams.get("new_ticket")) {
+      history.replaceState(null, "", location.pathname);
+    }
+  }, [isNewTicketOpen]);
+
   return (
-    <main>
-      <header>
-        <SupportHeader onOpenNewTicket={() => setIsNewTicketOpen(true)} />
-      </header>
+    <>
+      <main>
+        <header>
+          <SupportHeader onOpenNewTicket={() => setIsNewTicketOpen(true)} />
+        </header>
 
-      {selectedConversationSlug == null ? (
-        <ConversationList onSelect={setSelectedConversationSlug} onOpenNewTicket={() => setIsNewTicketOpen(true)} />
-      ) : (
-        <ConversationDetail
-          conversationSlug={selectedConversationSlug}
-          onBack={() => setSelectedConversationSlug(null)}
-        />
-      )}
-
+        {selectedConversationSlug == null ? (
+          <ConversationList onSelect={setSelectedConversationSlug} onOpenNewTicket={() => setIsNewTicketOpen(true)} />
+        ) : (
+          <ConversationDetail
+            conversationSlug={selectedConversationSlug}
+            onBack={() => setSelectedConversationSlug(null)}
+          />
+        )}
+      </main>
       <NewTicketModal
         open={isNewTicketOpen}
         onClose={() => setIsNewTicketOpen(false)}
@@ -43,7 +53,7 @@ export default function SupportPortal() {
           setSelectedConversationSlug(slug);
         }}
       />
-    </main>
+    </>
   );
 }
 
@@ -54,16 +64,7 @@ function ConversationList({
   onSelect: (slug: string) => void;
   onOpenNewTicket: () => void;
 }) {
-  const { data, isLoading, error, refetch } = useConversations();
-
-  const refresh = React.useMemo(() => debounce(() => void refetch(), 300), [refetch]);
-
-  React.useEffect(() => {
-    const id = setInterval(() => {
-      refresh();
-    }, 5000);
-    return () => clearInterval(id);
-  }, [refresh]);
+  const { data, isLoading, error } = useConversations();
 
   if (isLoading) return null;
   if (error) return <div>Something went wrong.</div>;
@@ -185,12 +186,34 @@ function NewTicketModal({
 
   const [subject, setSubject] = React.useState("");
   const [message, setMessage] = React.useState("");
+  const [attachments, setAttachments] = React.useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const formRef = React.useRef<HTMLFormElement | null>(null);
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   return (
-    <Modal open={open} onClose={onClose} title="New ticket">
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="How can we help you today?"
+      footer={
+        <>
+          <Button onClick={() => fileInputRef.current?.click()} disabled={isSubmitting}>
+            Attach files
+          </Button>
+          <Button
+            color="accent"
+            onClick={() => formRef.current?.requestSubmit()}
+            disabled={isSubmitting || !subject.trim() || !message.trim()}
+          >
+            {isSubmitting ? "Creating..." : "Create"}
+          </Button>
+        </>
+      }
+    >
       <form
-        className="space-y-4"
+        ref={formRef}
+        className="space-y-4 md:w-[700px]"
         onSubmit={(e) => {
           e.preventDefault();
           void (async () => {
@@ -198,7 +221,7 @@ function NewTicketModal({
             setIsSubmitting(true);
             try {
               const { conversationSlug } = await createConversation({ subject: subject.trim() });
-              await createMessage({ conversationSlug, content: message.trim() });
+              await createMessage({ conversationSlug, content: message.trim(), attachments });
               onCreated(conversationSlug);
             } finally {
               setIsSubmitting(false);
@@ -206,33 +229,53 @@ function NewTicketModal({
           })();
         }}
       >
-        <div className="space-y-1">
-          <label className="block text-sm font-medium">Subject</label>
-          <input
-            className="w-full rounded border px-3 py-2"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            placeholder="Brief summary"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="block text-sm font-medium">Message</label>
-          <textarea
-            className="w-full rounded border px-3 py-2"
-            rows={6}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Describe your issue"
-          />
-        </div>
-        <div className="flex items-center justify-end gap-2">
-          <Button type="button" onClick={onClose} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create"}
-          </Button>
-        </div>
+        <label className="sr-only">Subject</label>
+        <input value={subject} placeholder="Subject" onChange={(e) => setSubject(e.target.value)} />
+        <label className="sr-only">Message</label>
+        <textarea
+          rows={6}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Tell us about your issue or question..."
+        />
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          onChange={(e) => {
+            const files = Array.from(e.target.files ?? []);
+            if (files.length === 0) return;
+            setAttachments((prev) => [...prev, ...files]);
+            e.currentTarget.value = "";
+          }}
+        />
+        {attachments.length > 0 ? (
+          <div role="list" className="rows" aria-label="Files">
+            {attachments.map((file, index) => (
+              <div role="listitem" key={`${file.name}-${index}`} className="content actions">
+                <div className="content">
+                  <FileRowContent
+                    name={FileUtils.getFileNameWithoutExtension(file.name)}
+                    extension={FileUtils.getFileExtension(file.name).toUpperCase()}
+                    externalLinkUrl={null}
+                    isUploading={false}
+                    details={<li>{FileUtils.getReadableFileSize(file.size)}</li>}
+                  />
+                </div>
+                <div className="actions">
+                  <Button
+                    outline
+                    color="danger"
+                    aria-label="Remove"
+                    onClick={() => setAttachments((prev) => prev.filter((_, i) => i !== index))}
+                  >
+                    <Icon name="trash2" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </form>
     </Modal>
   );
