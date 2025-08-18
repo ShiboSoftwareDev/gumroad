@@ -1,5 +1,8 @@
 import { HelperClientProvider } from "@helperai/react";
 import React from "react";
+import { createCast } from "ts-safe-cast";
+
+import { register } from "$app/utils/serverComponentUtil";
 
 import SupportPortal from "$app/components/support/SupportPortal";
 
@@ -18,10 +21,12 @@ type Props = {
   };
 };
 
-export default function SupportPortalPage({ host, session }: Props) {
+function SupportPortalPage({ host, session }: Props) {
   return (
     <HelperClientProvider host={host} session={session}>
       <SupportPortal />
     </HelperClientProvider>
   );
 }
+
+export default register({ component: SupportPortalPage, propParser: createCast() });

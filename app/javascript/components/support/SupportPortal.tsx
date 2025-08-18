@@ -1,3 +1,4 @@
+import type { Message } from "@helperai/client";
 import {
   useConversations,
   useConversation,
@@ -6,28 +7,59 @@ import {
   useCreateConversation,
   MessageContent,
 } from "@helperai/react";
+import pinkIcon from "images/pink-icon.png";
 import placeholderImage from "images/placeholders/support.png";
+import startCase from "lodash/startCase";
 import React, { useEffect } from "react";
 
 import FileUtils from "$app/utils/file";
 
 import { Button } from "$app/components/Button";
+import { useCurrentSeller } from "$app/components/CurrentSeller";
 import { FileRowContent } from "$app/components/FileRowContent";
 import { Icon } from "$app/components/Icons";
 import { Modal } from "$app/components/Modal";
 import { SupportHeader } from "$app/components/server-components/support/Header";
+import { useGlobalEventListener } from "$app/components/useGlobalEventListener";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 
 export default function SupportPortal() {
-  const [selectedConversationSlug, setSelectedConversationSlug] = React.useState<string | null>(null);
   const { searchParams } = new URL(useOriginalLocation());
+  const [selectedConversationSlug, setSelectedConversationSlug] = React.useState<string | null>(searchParams.get("id"));
   const [isNewTicketOpen, setIsNewTicketOpen] = React.useState(!!searchParams.get("new_ticket"));
 
   useEffect(() => {
-    if (!isNewTicketOpen && new URL(location.href).searchParams.get("new_ticket")) {
-      history.replaceState(null, "", location.pathname);
+    const url = new URL(location.href);
+    if (!isNewTicketOpen && url.searchParams.get("new_ticket")) {
+      url.searchParams.delete("new_ticket");
+      history.replaceState(null, "", url.toString());
     }
   }, [isNewTicketOpen]);
+
+  useEffect(() => {
+    const url = new URL(location.href);
+    if (selectedConversationSlug) {
+      url.searchParams.set("id", selectedConversationSlug);
+    } else {
+      url.searchParams.delete("id");
+    }
+    if (url.toString() !== window.location.href) history.pushState(null, "", url.toString());
+  }, [selectedConversationSlug]);
+
+  useGlobalEventListener("popstate", () => {
+    const params = new URL(location.href).searchParams;
+    setSelectedConversationSlug(params.get("id"));
+    setIsNewTicketOpen(!!params.get("new_ticket"));
+  });
+
+  if (selectedConversationSlug != null) {
+    return (
+      <ConversationDetail
+        conversationSlug={selectedConversationSlug}
+        onBack={() => setSelectedConversationSlug(null)}
+      />
+    );
+  }
 
   return (
     <>
@@ -35,15 +67,7 @@ export default function SupportPortal() {
         <header>
           <SupportHeader onOpenNewTicket={() => setIsNewTicketOpen(true)} />
         </header>
-
-        {selectedConversationSlug == null ? (
-          <ConversationList onSelect={setSelectedConversationSlug} onOpenNewTicket={() => setIsNewTicketOpen(true)} />
-        ) : (
-          <ConversationDetail
-            conversationSlug={selectedConversationSlug}
-            onBack={() => setSelectedConversationSlug(null)}
-          />
-        )}
+        <ConversationList onSelect={setSelectedConversationSlug} onOpenNewTicket={() => setIsNewTicketOpen(true)} />
       </main>
       <NewTicketModal
         open={isNewTicketOpen}
@@ -54,6 +78,45 @@ export default function SupportPortal() {
         }}
       />
     </>
+  );
+}
+
+function MessageListItem({ message, isLastMessage }: { message: Message; isLastMessage: boolean }) {
+  const [isExpanded, setIsExpanded] = React.useState(isLastMessage);
+  const currentSeller = useCurrentSeller();
+  return (
+    <div role="listitem">
+      <div className="content">
+        <img
+          className="user-avatar !w-9"
+          src={message.role === "user" ? (currentSeller?.avatarUrl ?? pinkIcon) : pinkIcon}
+        />
+        <div className="font-bold">
+          {message.role === "user" ? (currentSeller?.name ?? "You") : message.staffName || startCase(message.role)}
+        </div>
+        <div className={isExpanded ? "hidden" : "ml-2 line-clamp-1 min-w-0"}>
+          <MessageContent message={message} />
+        </div>
+        <div className="flex-1 text-right">
+          {new Date(message.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+        </div>
+      </div>
+      <div className="actions">
+        <Button
+          outline
+          onClick={() => setIsExpanded((v) => !v)}
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? "Collapse message" : "Expand message"}
+        >
+          {isExpanded ? <Icon name="outline-cheveron-up" /> : <Icon name="outline-cheveron-down" />}
+        </Button>
+      </div>
+      {isExpanded ? (
+        <div className="col-span-full pl-12">
+          <MessageContent message={message} />
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -92,23 +155,21 @@ function ConversationList({
   }
 
   return (
-    <div className="overflow-x-auto rounded border">
-      <table className="divide-gray-200 min-w-full divide-y">
-        <thead className="bg-gray-50">
+    <div>
+      <table>
+        <thead>
           <tr>
-            <th className="text-gray-700 px-4 py-3 text-left text-sm font-medium">Subject</th>
-            <th className="text-gray-700 px-4 py-3 text-left text-sm font-medium">Message count</th>
-            <th className="text-gray-700 px-4 py-3 text-left text-sm font-medium">Last updated</th>
+            <th>Subject</th>
+            <th>Message count</th>
+            <th>Last updated</th>
           </tr>
         </thead>
-        <tbody className="divide-gray-100 divide-y bg-white">
+        <tbody>
           {conversations.map((c) => (
-            <tr key={c.slug} className="hover:bg-gray-50 cursor-pointer" onClick={() => onSelect(c.slug)}>
-              <td className="text-gray-900 px-4 py-3 text-sm">{c.subject}</td>
-              <td className="text-gray-500 px-4 py-3 text-sm">{c.messageCount}</td>
-              <td className="text-gray-500 px-4 py-3 text-sm">
-                {c.latestMessageAt ? new Date(c.latestMessageAt).toLocaleString() : "—"}
-              </td>
+            <tr key={c.slug} aria-selected={false} onClick={() => onSelect(c.slug)}>
+              <td>{c.subject}</td>
+              <td>{c.messageCount}</td>
+              <td>{c.latestMessageAt ? new Date(c.latestMessageAt).toLocaleString() : "—"}</td>
             </tr>
           ))}
         </tbody>
@@ -129,46 +190,52 @@ function ConversationDetail({ conversationSlug, onBack }: { conversationSlug: st
   if (error || !conversation) return <div>Something went wrong.</div>;
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <Button onClick={onBack}>Back</Button>
-        <h2 className="text-xl font-semibold">{conversation.subject}</h2>
-      </div>
+    <main>
+      <header className="!gap-0">
+        <a className="no-underline" onClick={onBack}>
+          <Icon name="arrow-left" /> Go back to Support tickets
+        </a>
+        <h1>{conversation.subject}</h1>
+      </header>
 
-      <div className="space-y-3">
-        {conversation.messages.map(({ id, content, role, staffName, createdAt }) => (
-          <div key={id} className="rounded border p-3">
-            <div className="text-gray-500 mb-1 text-xs">
-              <span className="font-medium">{role === "user" ? "You" : staffName || role}</span>
-              <span> · {new Date(createdAt).toLocaleString()}</span>
-            </div>
-            <MessageContent message={{ content }} />
+      <div>
+        <div role="list" className="rows" aria-label="Messages">
+          {conversation.messages.map((message, index) => (
+            <MessageListItem
+              key={message.id}
+              message={message}
+              isLastMessage={index === conversation.messages.length - 1}
+            />
+          ))}
+        </div>
+
+        <form
+          className="mt-4 flex flex-col gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void (async () => {
+              const trimmed = input.trim();
+              if (!trimmed) return;
+              await createMessage({ conversationSlug: conversation.slug, content: trimmed });
+              setInput("");
+              void refetch();
+            })();
+          }}
+        >
+          <label htmlFor="reply">Reply</label>
+          <input
+            className="flex-1 rounded border px-3 py-2"
+            placeholder="Type your message"
+            id="reply"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <div>
+            <Button type="submit">Send</Button>
           </div>
-        ))}
+        </form>
       </div>
-
-      <form
-        className="mt-4 flex items-center gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void (async () => {
-            const trimmed = input.trim();
-            if (!trimmed) return;
-            await createMessage({ conversationSlug: conversation.slug, content: trimmed });
-            setInput("");
-            void refetch();
-          })();
-        }}
-      >
-        <input
-          className="flex-1 rounded border px-3 py-2"
-          placeholder="Type your message"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <Button type="submit">Send</Button>
-      </form>
-    </div>
+    </main>
   );
 }
 
@@ -252,7 +319,7 @@ function NewTicketModal({
         {attachments.length > 0 ? (
           <div role="list" className="rows" aria-label="Files">
             {attachments.map((file, index) => (
-              <div role="listitem" key={`${file.name}-${index}`} className="content actions">
+              <div role="listitem" key={`${file.name}-${index}`}>
                 <div className="content">
                   <FileRowContent
                     name={FileUtils.getFileNameWithoutExtension(file.name)}
