@@ -1,5 +1,6 @@
 import type { Message } from "@helperai/client";
 import { useConversation, useRealtimeEvents, useCreateMessage, MessageContent } from "@helperai/react";
+import cx from "classnames";
 import pinkIcon from "images/pink-icon.png";
 import startCase from "lodash/startCase";
 import React from "react";
@@ -16,13 +17,15 @@ function MessageListItem({ message, isLastMessage }: { message: Message; isLastM
   const [isExpanded, setIsExpanded] = React.useState(isLastMessage);
   const currentSeller = useCurrentSeller();
   const attachments = [...message.publicAttachments, ...message.privateAttachments];
+  const image = message.role === "user" ? (currentSeller?.avatarUrl ?? pinkIcon) : pinkIcon;
   return (
-    <div role="listitem">
+    <div
+      role="listitem"
+      className="cursor-pointer hover:bg-[var(--active-bg)]"
+      onClick={() => setIsExpanded((v) => !v)}
+    >
       <div className="content">
-        <img
-          className="user-avatar !w-9"
-          src={message.role === "user" ? (currentSeller?.avatarUrl ?? pinkIcon) : pinkIcon}
-        />
+        <img className={cx("user-avatar !w-9", image === pinkIcon ? "!border-none" : "")} src={image} />
         <div className={`font-bold ${isExpanded ? "flex-1" : ""}`}>
           {message.role === "user" ? (currentSeller?.name ?? "You") : message.staffName || startCase(message.role)}
         </div>
@@ -34,12 +37,7 @@ function MessageListItem({ message, isLastMessage }: { message: Message; isLastM
         </div>
       </div>
       <div className="actions">
-        <Button
-          outline
-          onClick={() => setIsExpanded((v) => !v)}
-          aria-expanded={isExpanded}
-          aria-label={isExpanded ? "Collapse message" : "Expand message"}
-        >
+        <Button outline aria-expanded={isExpanded} aria-label={isExpanded ? "Collapse message" : "Expand message"}>
           {isExpanded ? <Icon name="outline-cheveron-up" /> : <Icon name="outline-cheveron-down" />}
         </Button>
       </div>
@@ -112,7 +110,7 @@ export function ConversationDetail({ conversationSlug, onBack }: { conversationS
       </header>
 
       <div>
-        <div role="list" className="rows mb-12" aria-label="Messages">
+        <div role="list" className="rows mb-12 overflow-hidden" aria-label="Messages">
           {conversation.messages.map((message, index) => (
             <MessageListItem
               key={message.id}

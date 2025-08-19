@@ -8,7 +8,13 @@ import { Button } from "$app/components/Button";
 import { UnreadTicketsBadge } from "$app/components/support/UnreadTicketsBadge";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 
-export function SupportHeader({ onOpenNewTicket }: { onOpenNewTicket: () => void; newTicketUrl?: string }) {
+export function SupportHeader({
+  onOpenNewTicket,
+  hasHelperSession = true,
+}: {
+  onOpenNewTicket: () => void;
+  hasHelperSession?: boolean;
+}) {
   const { pathname } = new URL(useOriginalLocation());
   const isHelpArticle =
     pathname.startsWith(Routes.help_center_root_path()) && pathname !== Routes.help_center_root_path();
@@ -48,7 +54,7 @@ export function SupportHeader({ onOpenNewTicket }: { onOpenNewTicket: () => void
           className="flex items-center gap-2 border-b-2 pb-2"
         >
           Support tickets
-          <UnreadTicketsBadge />
+          {hasHelperSession ? <UnreadTicketsBadge /> : null}
         </a>
       </div>
     </>
@@ -57,7 +63,7 @@ export function SupportHeader({ onOpenNewTicket }: { onOpenNewTicket: () => void
 
 type WrapperProps = {
   host: string;
-  session: {
+  session?: {
     email?: string | null;
     emailHash?: string | null;
     timestamp?: number | null;
@@ -67,14 +73,17 @@ type WrapperProps = {
       links?: Record<string, string> | null;
     } | null;
     currentToken?: string | null;
-  };
+  } | null;
   new_ticket_url: string;
 };
 
-const Wrapper = ({ host, session, new_ticket_url }: WrapperProps) => (
-  <HelperClientProvider host={host} session={session}>
-    <SupportHeader onOpenNewTicket={() => (window.location.href = new_ticket_url)} />
-  </HelperClientProvider>
-);
+const Wrapper = ({ host, session, new_ticket_url }: WrapperProps) =>
+  session ? (
+    <HelperClientProvider host={host} session={session}>
+      <SupportHeader onOpenNewTicket={() => (window.location.href = new_ticket_url)} />
+    </HelperClientProvider>
+  ) : (
+    <SupportHeader onOpenNewTicket={() => (window.location.href = new_ticket_url)} hasHelperSession={false} />
+  );
 
 export default register({ component: Wrapper, propParser: createCast() });
