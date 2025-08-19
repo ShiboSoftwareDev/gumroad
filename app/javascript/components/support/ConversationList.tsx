@@ -2,6 +2,8 @@ import { useConversations } from "@helperai/react";
 import placeholderImage from "images/placeholders/support.png";
 import React from "react";
 
+import { formatDate } from "$app/utils/date";
+
 import { Button } from "$app/components/Button";
 
 export function ConversationList({
@@ -44,16 +46,14 @@ export function ConversationList({
         <thead>
           <tr>
             <th>Subject</th>
-            <th>Message count</th>
             <th>Last updated</th>
           </tr>
         </thead>
         <tbody>
           {conversations.map((c) => (
             <tr key={c.slug} aria-selected={false} onClick={() => onSelect(c.slug)}>
-              <td>{c.subject}</td>
-              <td>{c.messageCount}</td>
-              <td>{c.latestMessageAt ? new Date(c.latestMessageAt).toLocaleString() : "—"}</td>
+              <td className={c.isUnread ? "w-full font-bold" : "w-full"}>{c.subject}</td>
+              <td className="whitespace-nowrap">{c.latestMessageAt ? formatDate(new Date(c.latestMessageAt)) : "—"}</td>
             </tr>
           ))}
         </tbody>

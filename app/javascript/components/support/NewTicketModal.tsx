@@ -44,14 +44,14 @@ export function NewTicketModal({
       footer={
         <>
           <Button onClick={() => fileInputRef.current?.click()} disabled={isSubmitting}>
-            Attach files
+            <Icon name="paperclip" /> Attach files
           </Button>
           <Button
             color="accent"
             onClick={() => formRef.current?.requestSubmit()}
             disabled={isSubmitting || !subject.trim() || !message.trim()}
           >
-            {isSubmitting ? "Creating..." : "Create"}
+            {isSubmitting ? "Sending..." : "Send message"}
           </Button>
         </>
       }

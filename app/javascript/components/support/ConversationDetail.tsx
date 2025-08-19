@@ -172,7 +172,7 @@ export function ConversationDetail({ conversationSlug, onBack }: { conversationS
           ) : null}
           <div className="flex gap-2">
             <Button onClick={() => fileInputRef.current?.click()} disabled={isSubmitting}>
-              Attach files
+              <Icon name="paperclip" /> Attach files
             </Button>
             <Button type="submit" color="primary" disabled={isSubmitting || !input.trim()}>
               {isSubmitting ? "Sending..." : "Send reply"}

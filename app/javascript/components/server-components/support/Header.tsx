@@ -1,9 +1,11 @@
+import { HelperClientProvider } from "@helperai/react";
 import React from "react";
 import { createCast } from "ts-safe-cast";
 
 import { register } from "$app/utils/serverComponentUtil";
 
 import { Button } from "$app/components/Button";
+import { UnreadTicketsBadge } from "$app/components/support/UnreadTicketsBadge";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 
 export function SupportHeader({ onOpenNewTicket }: { onOpenNewTicket: () => void; newTicketUrl?: string }) {
@@ -43,17 +45,36 @@ export function SupportHeader({ onOpenNewTicket }: { onOpenNewTicket: () => void
           href={Routes.support_index_path()}
           role="tab"
           aria-selected={pathname.startsWith(Routes.support_index_path())}
-          className="border-b-2 pb-2"
+          className="flex items-center gap-2 border-b-2 pb-2"
         >
           Support tickets
+          <UnreadTicketsBadge />
         </a>
       </div>
     </>
   );
 }
 
-const Wrapper = ({ new_ticket_url }: { new_ticket_url: string }) => (
-  <SupportHeader onOpenNewTicket={() => (window.location.href = new_ticket_url)} />
+type WrapperProps = {
+  host: string;
+  session: {
+    email?: string | null;
+    emailHash?: string | null;
+    timestamp?: number | null;
+    customerMetadata?: {
+      name?: string | null;
+      value?: number | null;
+      links?: Record<string, string> | null;
+    } | null;
+    currentToken?: string | null;
+  };
+  new_ticket_url: string;
+};
+
+const Wrapper = ({ host, session, new_ticket_url }: WrapperProps) => (
+  <HelperClientProvider host={host} session={session}>
+    <SupportHeader onOpenNewTicket={() => (window.location.href = new_ticket_url)} />
+  </HelperClientProvider>
 );
 
 export default register({ component: Wrapper, propParser: createCast() });
