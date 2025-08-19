@@ -130,7 +130,7 @@ const DiscoverEligibilityPromo = () => {
         <a href="/help/article/79-gumroad-discover" target="_blank" rel="noreferrer">
           eligibility criteria
         </a>
-        , which includes completing the account review process explained in detail{" "}
+        , which includes making at least one successful sale and completing the Risk Review process explained in detail{" "}
         <a href="/help/article/13-getting-paid" target="_blank" rel="noreferrer">
           here
         </a>

@@ -143,7 +143,9 @@ export const AffiliateSignupForm = () => {
                 />
                 {enableAffiliateLink ? (
                   <CopyToClipboard text={affiliateRequestUrl}>
-                    <button className="link">Copy link</button>
+                    <button type="button" className="link">
+                      Copy link
+                    </button>
                   </CopyToClipboard>
                 ) : null}
               </div>
