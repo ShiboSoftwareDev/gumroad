@@ -12,6 +12,8 @@ module HelperWidget
   end
 
   def helper_session
+    return unless current_seller
+
     timestamp = (Time.current.to_f * 1000).to_i
 
     {
