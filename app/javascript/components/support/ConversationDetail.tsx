@@ -19,12 +19,11 @@ function MessageListItem({ message, isLastMessage }: { message: Message; isLastM
   const attachments = [...message.publicAttachments, ...message.privateAttachments];
   const image = message.role === "user" ? (currentSeller?.avatarUrl ?? pinkIcon) : pinkIcon;
   return (
-    <div
-      role="listitem"
-      className="cursor-pointer hover:bg-[var(--active-bg)]"
-      onClick={() => setIsExpanded((v) => !v)}
-    >
-      <div className="content">
+    <div role="listitem" className="!items-stretch !gap-0 !p-0">
+      <div
+        className="content peer cursor-pointer p-4 hover:bg-[var(--active-bg)] peer-hover:bg-[var(--active-bg)]"
+        onClick={() => setIsExpanded((v) => !v)}
+      >
         <img className={cx("user-avatar !w-9", image === pinkIcon ? "!border-none" : "")} src={image} />
         <div className={`font-bold ${isExpanded ? "flex-1" : ""}`}>
           {message.role === "user" ? (currentSeller?.name ?? "You") : message.staffName || startCase(message.role)}
@@ -36,24 +35,27 @@ function MessageListItem({ message, isLastMessage }: { message: Message; isLastM
           {new Date(message.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
         </div>
       </div>
-      <div className="actions">
+      <div
+        className="actions peer cursor-pointer p-4 pl-0 hover:bg-[var(--active-bg)] peer-hover:bg-[var(--active-bg)]"
+        onClick={() => setIsExpanded((v) => !v)}
+      >
         <Button outline aria-expanded={isExpanded} aria-label={isExpanded ? "Collapse message" : "Expand message"}>
           {isExpanded ? <Icon name="outline-cheveron-up" /> : <Icon name="outline-cheveron-down" />}
         </Button>
       </div>
       {isExpanded ? (
-        <div className="col-span-full pl-12">
+        <div className="relative col-span-full cursor-default p-4 pl-16">
           <MessageContent message={message} />
           {attachments.length > 0 ? (
             <div role="list" className="rows mt-4 w-full max-w-[500px]">
               {attachments.map((attachment) => (
                 <div
                   role="listitem"
-                  className={attachment.contentType?.startsWith("image/") ? "overflow-hidden !p-0" : ""}
+                  className={attachment.contentType?.startsWith("image/") ? "!p-0" : ""}
                   key={attachment.url}
                 >
                   {attachment.contentType?.startsWith("image/") ? (
-                    <img src={attachment.url} alt={attachment.name ?? "Attachment"} className="w-full" />
+                    <img src={attachment.url} alt={attachment.name ?? "Attachment"} className="w-full rounded-sm" />
                   ) : (
                     <FileRowContent
                       name={FileUtils.getFileNameWithoutExtension(attachment.name ?? "Attachment")}
@@ -97,7 +99,7 @@ export function ConversationDetail({ conversationSlug, onBack }: { conversationS
     void refetch();
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return null;
   if (error || !conversation) return <div>Something went wrong.</div>;
 
   return (
