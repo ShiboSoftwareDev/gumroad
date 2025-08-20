@@ -281,6 +281,7 @@ describe Purchase::Blockable do
         ["email", "purchaser@example.com"],
         ["browser_guid", purchase.browser_guid],
         ["email", "another-email@example.com"],
+        ["email", purchase.purchaser.paypal_payout_email],
         ["ip_address", purchase.ip_address],
         ["charge_processor_fingerprint", purchase.stripe_fingerprint]
       ] end
@@ -288,7 +289,7 @@ describe Purchase::Blockable do
       it "blocks buyer's email, browser_guid, ip_address and stripe_fingerprint" do
         expect do
           purchase.mark_failed
-        end.to change { BlockedObject.count }.from(0).to(5)
+        end.to change { BlockedObject.count }.from(0).to(6)
         expect(BlockedObject.pluck(:object_type, :object_value)).to match_array(expected_blocked_objects)
       end
     end
@@ -320,6 +321,7 @@ describe Purchase::Blockable do
 
             @expected_blocked_objects = [
               ["email", @purchaser.email],
+              ["email", @purchaser.paypal_payout_email],
               ["browser_guid", @purchase.browser_guid],
               ["ip_address", @purchase.ip_address],
               ["charge_processor_fingerprint", @purchase.stripe_fingerprint]
@@ -329,7 +331,7 @@ describe Purchase::Blockable do
           it "blocks the buyer" do
             expect do
               @purchase.mark_failed!
-            end.to change { BlockedObject.count }.from(0).to(4)
+            end.to change { BlockedObject.count }.from(0).to(5)
             expect(BlockedObject.pluck(:object_type, :object_value)).to match_array(@expected_blocked_objects)
           end
         end
