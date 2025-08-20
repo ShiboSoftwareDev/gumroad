@@ -32,6 +32,16 @@ describe Purchase::Blockable do
       end
     end
 
+    context "when the purchase's paypal payout email is blocked" do
+      before do
+        BlockedObject.block!(BLOCKED_OBJECT_TYPES[:email], buyer.paypal_payout_email, nil)
+      end
+
+      it "returns true" do
+        expect(purchase.buyer_blocked?).to eq(true)
+      end
+    end
+
     context "when the buyer's email address is blocked" do
       before do
         BlockedObject.block!(BLOCKED_OBJECT_TYPES[:email], buyer.email, nil)
