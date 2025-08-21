@@ -7,7 +7,7 @@ module Purchase::Paypal
     scope :paypal, -> { where(charge_processor_id: PaypalChargeProcessor.charge_processor_id) }
     scope :paypal_orders, -> { where.not(paypal_order_id: nil) }
     scope :unsuccessful_paypal_orders, lambda { |created_after_timestamp, created_before_timestamp|
-      unsuccessful.paypal_orders.created_after(created_after_timestamp).created_before(created_before_timestamp)
+      not_successful.paypal_orders.created_after(created_after_timestamp).created_before(created_before_timestamp)
     }
   end
 
