@@ -32,9 +32,9 @@ describe Purchase::Blockable do
       end
     end
 
-    context "when the purchase's paypal payout email is blocked" do
+    context "when the purchase's paypal email is blocked" do
       before do
-        BlockedObject.block!(BLOCKED_OBJECT_TYPES[:email], buyer.paypal_payout_email, nil)
+        BlockedObject.block!(BLOCKED_OBJECT_TYPES[:email], purchase.paypal_email, nil)
       end
 
       it "returns true" do
@@ -281,7 +281,7 @@ describe Purchase::Blockable do
         ["email", "purchaser@example.com"],
         ["browser_guid", purchase.browser_guid],
         ["email", "another-email@example.com"],
-        ["email", purchase.purchaser.paypal_payout_email],
+        ["email", purchase.paypal_email],
         ["ip_address", purchase.ip_address],
         ["charge_processor_fingerprint", purchase.stripe_fingerprint]
       ] end
@@ -321,7 +321,7 @@ describe Purchase::Blockable do
 
             @expected_blocked_objects = [
               ["email", @purchaser.email],
-              ["email", @purchaser.paypal_payout_email],
+              ["email", @purchase.paypal_email],
               ["browser_guid", @purchase.browser_guid],
               ["ip_address", @purchase.ip_address],
               ["charge_processor_fingerprint", @purchase.stripe_fingerprint]
